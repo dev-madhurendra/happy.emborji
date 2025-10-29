@@ -2,7 +2,7 @@ export type Product = {
   id?: string
   name: string
   price: number
-  category: "crochet" | "embroidery"
+  category: string
   tags?: string[]
   image: string
   images?: string[]
