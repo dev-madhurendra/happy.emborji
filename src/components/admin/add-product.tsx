@@ -1,8 +1,20 @@
-import { useState } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Upload, Check, AlertCircle, Loader } from "lucide-react";
 
+interface ProductForm {
+  name: string;
+  price: string;
+  category: string;
+  tags: string;
+}
+
+interface Message {
+  type: "success" | "error" | "info";
+  text: string;
+}
+
 export default function AdminPage() {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<ProductForm>({
     name: "",
     price: "",
     category: "",
@@ -11,17 +23,15 @@ export default function AdminPage() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{
-    type: "success" | "error" | "info";
-    text: string;
-  } | null>(null);
+  const [message, setMessage] = useState<Message | null>(null);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
     setMessage(null);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
@@ -32,25 +42,27 @@ export default function AdminPage() {
     }
   };
 
-  const validateForm = () => {
-    if (!form.name.trim())
-      return setMessage({ type: "error", text: "Product name is required" });
-    if (!form.price || isNaN(parseFloat(form.price)))
-      return setMessage({
-        type: "error",
-        text: "Please enter a valid price",
-      });
-    if (!form.category.trim())
-      return setMessage({ type: "error", text: "Category is required" });
-    if (!file)
-      return setMessage({
-        type: "error",
-        text: "Please upload a product image",
-      });
+  const validateForm = (): boolean | void => {
+    if (!form.name.trim()) {
+      setMessage({ type: "error", text: "Product name is required" });
+      return;
+    }
+    if (!form.price || isNaN(parseFloat(form.price))) {
+      setMessage({ type: "error", text: "Please enter a valid price" });
+      return;
+    }
+    if (!form.category.trim()) {
+      setMessage({ type: "error", text: "Category is required" });
+      return;
+    }
+    if (!file) {
+      setMessage({ type: "error", text: "Please upload a product image" });
+      return;
+    }
     return true;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm() !== true) return;
 
@@ -59,15 +71,18 @@ export default function AdminPage() {
 
     try {
       const formData = new FormData();
-      Object.entries(form).forEach(([key, value]) =>
-        formData.append(key, value as string)
-      );
-      formData.append("image", file);
-
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/addProduct`, {
-        method: "POST",
-        body: formData,
+      Object.entries(form).forEach(([key, value]) => {
+        formData.append(key, value);
       });
+      if (file) formData.append("image", file);
+
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/addProduct`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (res.ok) {
         setMessage({ type: "success", text: "✓ Product added successfully!" });
@@ -80,7 +95,7 @@ export default function AdminPage() {
           text: "Failed to upload product. Please try again.",
         });
       }
-    } catch (error) {
+    } catch {
       setMessage({
         type: "error",
         text: "Connection error. Please check your server.",
@@ -101,7 +116,7 @@ export default function AdminPage() {
             </p>
           </div>
 
-          <div className="p-6 space-y-5">
+          <form onSubmit={handleSubmit} className="p-6 space-y-5">
             {message && (
               <div
                 className={`p-4 rounded-lg flex items-center gap-3 border ${
@@ -122,6 +137,7 @@ export default function AdminPage() {
               </div>
             )}
 
+            {/* Product Name */}
             <div>
               <label className="block text-sm font-semibold text-foreground mb-2">
                 Product Name *
@@ -132,10 +148,11 @@ export default function AdminPage() {
                 value={form.name}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
 
+            {/* Price & Category */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-2">
@@ -147,7 +164,7 @@ export default function AdminPage() {
                   value={form.price}
                   onChange={handleChange}
                   disabled={loading}
-                  className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
               <div>
@@ -160,11 +177,12 @@ export default function AdminPage() {
                   value={form.category}
                   onChange={handleChange}
                   disabled={loading}
-                  className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
             </div>
 
+            {/* Tags */}
             <div>
               <label className="block text-sm font-semibold text-foreground mb-2">
                 Tags (optional)
@@ -175,10 +193,11 @@ export default function AdminPage() {
                 value={form.tags}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
 
+            {/* File Upload */}
             <div>
               <label className="block text-sm font-semibold text-foreground mb-2">
                 Product Image *
@@ -216,8 +235,9 @@ export default function AdminPage() {
               </div>
             </div>
 
+            {/* Submit Button */}
             <button
-              onClick={handleSubmit}
+              type="submit"
               disabled={loading}
               className="w-full bg-primary text-primary-foreground font-semibold py-3 rounded-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
@@ -230,7 +250,7 @@ export default function AdminPage() {
                 "Add Product"
               )}
             </button>
-          </div>
+          </form>
         </div>
 
         <p className="text-center text-muted-foreground text-sm mt-4">
