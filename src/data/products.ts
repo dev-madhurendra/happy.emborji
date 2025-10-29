@@ -10,15 +10,6 @@ export type Product = {
 
 export const products: Product[] = [
   {
-    id: "p1",
-    name: "Crochet Bouquet – Blush",
-    price: 49,
-    category: "crochet",
-    tags: ["bouquet"],
-    image: "/crochet-bouquet.jpg",
-    images: ["/crochet-bouquet.jpg", "/crochet-bouquet-detail.jpg"],
-  },
-  {
     id: "p2",
     name: "Hoop Art – Initial",
     price: 29,
