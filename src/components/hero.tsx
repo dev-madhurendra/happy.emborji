@@ -1,8 +1,28 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Sparkles, Heart, Package } from "lucide-react";
+import { Sparkles, Heart, Package, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export function Hero() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  
+  const images = [
+    { src: "/crochet-and-embroidery-flatlay.jpg", label: "Embroidery Art", color: "from-pink-500 to-rose-500" },
+    { src: "/crochet-bouquet.jpg", label: "Flower Bouquets", color: "from-purple-500 to-pink-500" },
+    { src: "/crochet-keychain.jpg", label: "Custom Keychains", color: "from-amber-500 to-orange-500" },
+    { src: "/crochet-doll.jpg", label: "Unique Gifts", color: "from-blue-500 to-purple-500" },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % images.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
+
   return (
     <section className="relative mx-auto max-w-7xl px-4 py-16 md:py-24">
       {/* Decorative background elements */}
@@ -100,43 +120,104 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Image Side */}
+        {/* Interactive Carousel Gallery */}
         <div className="relative">
-          {/* Main Image */}
-          <div className="group relative overflow-hidden rounded-2xl border-2 border-border shadow-2xl">
-            <img
-              src="/crochet-and-embroidery-flatlay.jpg"
-              alt="Handcrafted crochet and embroidery flatlay"
-              className="aspect-square h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+          {/* Main Carousel Container */}
+          <div className="relative aspect-square overflow-hidden rounded-3xl">
+            {/* Slides */}
+            {images.map((image, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+                  index === currentSlide
+                    ? "translate-x-0 opacity-100"
+                    : index < currentSlide
+                    ? "-translate-x-full opacity-0"
+                    : "translate-x-full opacity-0"
+                }`}
+              >
+                {/* Gradient Overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${image.color} opacity-20`}></div>
+                
+                {/* Image */}
+                <img
+                  src={image.src}
+                  alt={image.label}
+                  className="h-full w-full object-cover"
+                />
+                
+                {/* Bottom Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                
+                {/* Label */}
+                <div className="absolute bottom-8 left-8 right-8">
+                  <div className="inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-6 py-3 backdrop-blur-xl">
+                    <div className={`h-2 w-2 rounded-full bg-gradient-to-r ${image.color} animate-pulse`}></div>
+                    <span className="text-lg font-semibold text-white">{image.label}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Navigation Arrows */}
+            <button
+              onClick={prevSlide}
+              className="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 backdrop-blur-xl transition-all hover:bg-white/20"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft className="h-5 w-5 text-white" />
+            </button>
+            <button
+              onClick={nextSlide}
+              className="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 backdrop-blur-xl transition-all hover:bg-white/20"
+              aria-label="Next slide"
+            >
+              <ChevronRight className="h-5 w-5 text-white" />
+            </button>
+
+            {/* Dots Indicator */}
+            <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`h-2 rounded-full transition-all ${
+                    index === currentSlide ? "w-8 bg-white" : "w-2 bg-white/50"
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Floating Cards */}
-          <div className="absolute -right-4 top-8 rounded-xl border bg-background/95 p-4 shadow-lg backdrop-blur-sm md:-right-8">
+          {/* Floating Stats Cards */}
+          <div className="absolute -right-4 top-8 z-30 rounded-2xl border bg-white/95 p-4 shadow-2xl backdrop-blur-sm md:-right-8">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-pink-100">
-                <Heart className="h-6 w-6 text-pink-600" fill="currentColor" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-rose-500">
+                <Heart className="h-6 w-6 text-white" fill="currentColor" />
               </div>
               <div>
-                <p className="text-sm font-semibold">Premium Quality</p>
-                <p className="text-xs text-muted-foreground">Hand-selected materials</p>
+                <p className="text-xl font-bold">250+</p>
+                <p className="text-xs text-muted-foreground">Products</p>
               </div>
             </div>
           </div>
 
-          <div className="absolute -left-4 bottom-8 rounded-xl border bg-background/95 p-4 shadow-lg backdrop-blur-sm md:-left-8">
+          <div className="absolute -left-4 bottom-8 z-30 rounded-2xl border bg-white/95 p-4 shadow-2xl backdrop-blur-sm md:-left-8">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
-                <Sparkles className="h-6 w-6 text-purple-600" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500">
+                <Star className="h-6 w-6 text-white" fill="currentColor" />
               </div>
               <div>
-                <p className="text-sm font-semibold">Customizable</p>
-                <p className="text-xs text-muted-foreground">Made just for you</p>
+                <p className="text-xl font-bold">5.0</p>
+                <p className="text-xs text-muted-foreground">Rating</p>
               </div>
             </div>
           </div>
+
+          {/* Decorative Blobs */}
+          <div className="absolute -right-8 top-1/3 -z-10 h-32 w-32 rounded-full bg-gradient-to-br from-purple-400/30 to-pink-400/30 blur-3xl"></div>
+          <div className="absolute -left-8 bottom-1/4 -z-10 h-24 w-24 rounded-full bg-gradient-to-br from-amber-400/30 to-rose-400/30 blur-3xl"></div>
         </div>
       </div>
     </section>
