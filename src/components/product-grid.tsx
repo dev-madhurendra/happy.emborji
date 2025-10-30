@@ -22,19 +22,33 @@ type Props = {
   showViewAll?: boolean
 }
 
-export function ProductGrid({ initialTab = "all", limit, categoryTag, showViewAll }: Props) {
+export function ProductGrid({
+  initialTab = "all",
+  limit = 8,
+  categoryTag,
+  showViewAll,
+}: Props) {
   const [tab, setTab] = useState<"all" | "crochet" | "embroidery">(initialTab)
   const [q, setQ] = useState("")
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
-  // Fetch products from backend
   useEffect(() => {
     async function fetchProducts() {
+      setLoading(true)
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products`)
+        const params = new URLSearchParams({
+          page: page.toString(),
+          limit: limit.toString(),
+        })
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products?${params}`)
         const data = await res.json()
-        setProducts(data)
+
+        // Adjust to your backend response structure
+        setProducts(data.products || [])
+        setTotalPages(data.totalPages || 1)
       } catch (err) {
         console.error("Error fetching products:", err)
       } finally {
@@ -42,18 +56,24 @@ export function ProductGrid({ initialTab = "all", limit, categoryTag, showViewAl
       }
     }
     fetchProducts()
-  }, [])
+  }, [page, limit])
 
   const filtered = useMemo(() => {
-    let list: Product[] = tab === "all" ? products : products.filter((p) => p.category === tab)
+    let list: Product[] =
+      tab === "all" ? products : products.filter((p) => p.category === tab)
+
     if (categoryTag) list = list.filter((p) => p.tags?.includes(categoryTag))
     if (q.trim()) {
       const s = q.toLowerCase()
-      list = list.filter((p) => p.name.toLowerCase().includes(s) || p.tags?.some((t) => t.includes(s)))
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(s) ||
+          p.tags?.some((t) => t.toLowerCase().includes(s))
+      )
     }
-    if (typeof limit === "number") return list.slice(0, limit)
+
     return list
-  }, [tab, q, limit, categoryTag, products])
+  }, [tab, q, categoryTag, products])
 
   if (loading) return <p className="text-center py-8 text-gray-500">Loading products...</p>
 
@@ -61,15 +81,13 @@ export function ProductGrid({ initialTab = "all", limit, categoryTag, showViewAl
     <section className="mx-auto max-w-7xl px-4 py-8">
       <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <h2 className="font-serif text-xl font-semibold">Products</h2>
-        <div className="flex w-full gap-3 md:w-auto">
-          <Input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search keychain, bouquet, hoop..."
-            className="w-full md:w-80"
-            aria-label="Search products"
-          />
-        </div>
+        <Input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search keychain, bouquet, hoop..."
+          className="w-full md:w-80"
+          aria-label="Search products"
+        />
       </div>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as any)} className="space-y-6">
@@ -79,16 +97,33 @@ export function ProductGrid({ initialTab = "all", limit, categoryTag, showViewAl
           <TabsTrigger value="embroidery">Embroidery</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all">
-          <Grid products={filtered} />
-        </TabsContent>
-        <TabsContent value="crochet">
-          <Grid products={filtered} />
-        </TabsContent>
-        <TabsContent value="embroidery">
+        <TabsContent value={tab}>
           <Grid products={filtered} />
         </TabsContent>
       </Tabs>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center items-center gap-4 mt-8">
+        <Button
+          variant="outline"
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </Button>
+
+        <span className="text-sm text-gray-600">
+          Page {page} of {totalPages}
+        </span>
+
+        <Button
+          variant="outline"
+          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          disabled={page === totalPages}
+        >
+          Next
+        </Button>
+      </div>
 
       {showViewAll && (
         <div className="mt-6 text-center">
