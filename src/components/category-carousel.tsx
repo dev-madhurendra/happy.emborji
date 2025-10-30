@@ -7,15 +7,17 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "./ui/carousel";
+import { staticCategories } from "../data/categories";
 
 type Category = {
   category: string;
   image: string;
-  count: number;
+  count?: number;
 };
 
+
 export function CategoryCarousel() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>(staticCategories);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,14 +34,6 @@ export function CategoryCarousel() {
     }
     fetchCategories();
   }, []);
-
-  if (loading) {
-    return (
-      <section className="mx-auto max-w-7xl px-4 py-8 text-center">
-        <p className="text-sm text-gray-500">Loading categories...</p>
-      </section>
-    );
-  }
 
   if (!categories.length) {
     return (
