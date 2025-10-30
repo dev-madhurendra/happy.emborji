@@ -167,7 +167,7 @@ export function ProductGrid({
       </div>
 
       {/* Enhanced Pagination */}
-      {totalPages > 1 && (
+      {totalPages > 0 && (
         <div className="mt-12 flex flex-col items-center gap-6">
           <div className="flex items-center gap-3">
             <Button
