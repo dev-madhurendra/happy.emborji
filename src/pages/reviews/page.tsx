@@ -3,7 +3,6 @@ import {
   Star,
   Heart,
   MessageCircle,
-  Instagram,
   ArrowLeft,
   Sparkles,
 } from "lucide-react";
