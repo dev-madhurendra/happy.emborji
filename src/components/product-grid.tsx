@@ -62,7 +62,7 @@ export function ProductGrid({
 
   const filtered = useMemo(() => {
     let list: Product[] =
-      tab === "all" ? products : products.filter((p) => p.category === tab)
+      tab === "all" ? products : products.filter((p) => ["embroidery", "crochet"].includes(p.category))
 
     if (categoryTag) list = list.filter((p) => p.tags?.includes(categoryTag))
     if (q.trim()) {
@@ -167,7 +167,7 @@ export function ProductGrid({
       </div>
 
       {/* Enhanced Pagination */}
-      {totalPages > 0 && (
+      {totalPages > 1 && (
         <div className="mt-12 flex flex-col items-center gap-6">
           <div className="flex items-center gap-3">
             <Button
