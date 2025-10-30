@@ -18,7 +18,7 @@ type Category = {
 
 export function CategoryCarousel() {
   const [categories, setCategories] = useState<Category[]>(staticCategories);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -29,7 +29,7 @@ export function CategoryCarousel() {
       } catch (err) {
         console.error("Failed to fetch categories:", err);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     }
     fetchCategories();
