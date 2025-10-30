@@ -47,6 +47,8 @@ export function ProductGrid({
         const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products?${params}`)
         const data = await res.json()
 
+        console.log(data)
+
         setProducts(data.products || [])
         setTotalPages(data.totalPages || 1)
       } catch (err) {

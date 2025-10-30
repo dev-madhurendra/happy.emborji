@@ -53,7 +53,7 @@ export function SiteFooter() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
                   <MapPin className="h-4 w-4 text-amber-600" />
                 </div>
-                <span>Varanasi, India</span>
+                <span>Khalilabad, Sant Kabir Nagar, Uttar Pradesh, India</span>
               </div>
             </div>
           </div>

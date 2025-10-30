@@ -124,7 +124,7 @@ function NavBar() {
             <Sparkles className="h-5 w-5 text-white" />
           </div>
           <span className="font-serif text-xl font-bold tracking-tight">
-            happy.embroji
+            Happy.Embroji
           </span>
         </Link>
 
