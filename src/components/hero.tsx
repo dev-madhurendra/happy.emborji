@@ -7,10 +7,10 @@ export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   
   const images = [
+    { src: "/crochet-doll.jpg", label: "Unique Gifts", color: "from-blue-500 to-purple-500" },
     { src: "/crochet-and-embroidery-flatlay.jpg", label: "Embroidery Art", color: "from-pink-500 to-rose-500" },
     { src: "/crochet-bouquet.jpg", label: "Flower Bouquets", color: "from-purple-500 to-pink-500" },
     { src: "/crochet-keychain.jpg", label: "Custom Keychains", color: "from-amber-500 to-orange-500" },
-    { src: "/crochet-doll.jpg", label: "Unique Gifts", color: "from-blue-500 to-purple-500" },
   ];
 
   useEffect(() => {
