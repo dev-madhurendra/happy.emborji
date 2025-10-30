@@ -58,7 +58,7 @@ export function ProductGrid({
       }
     }
     fetchProducts()
-  }, [page, limit])
+  }, [page, limit, products])
 
   // const filtered = useMemo(() => {
   //   let list: Product[] =
