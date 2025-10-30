@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { ProductCard } from "./product-card"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
@@ -10,7 +10,7 @@ type Product = {
   _id: string
   name: string
   price: number
-  category: string
+  category: string | "embroidery" | "crochet"
   tags: string[]
   image: string
   images?: string[]
@@ -26,7 +26,7 @@ type Props = {
 export function ProductGrid({
   initialTab = "all",
   limit = 8,
-  categoryTag,
+  // categoryTag,
   showViewAll,
 }: Props) {
   const [tab, setTab] = useState<"all" | "crochet" | "embroidery">(initialTab)
@@ -60,22 +60,22 @@ export function ProductGrid({
     fetchProducts()
   }, [page, limit])
 
-  const filtered = useMemo(() => {
-    let list: Product[] =
-      tab === "all" ? products : products.filter((p) => ["embroidery", "crochet"].includes(p.category))
+  // const filtered = useMemo(() => {
+  //   let list: Product[] =
+  //     tab === "all" ? products : products.filter((p) => ["embroidery", "crochet"].includes(p.category))
 
-    if (categoryTag) list = list.filter((p) => p.tags?.includes(categoryTag))
-    if (q.trim()) {
-      const s = q.toLowerCase()
-      list = list.filter(
-        (p) =>
-          p.name.toLowerCase().includes(s) ||
-          p.tags?.some((t) => t.toLowerCase().includes(s))
-      )
-    }
+  //   if (categoryTag) list = list.filter((p) => p.tags?.includes(categoryTag))
+  //   if (q.trim()) {
+  //     const s = q.toLowerCase()
+  //     list = list.filter(
+  //       (p) =>
+  //         p.name.toLowerCase().includes(s) ||
+  //         p.tags?.some((t) => t.toLowerCase().includes(s))
+  //     )
+  //   }
 
-    return list
-  }, [tab, q, categoryTag, products])
+  //   return list
+  // }, [tab, q, categoryTag, products])
 
   if (loading) {
     return (
@@ -155,13 +155,13 @@ export function ProductGrid({
             <div className="flex items-center gap-2 rounded-xl border bg-background/80 px-4 py-2 backdrop-blur-sm">
               <Sparkles className="h-4 w-4 text-amber-500" />
               <span className="text-sm font-medium">
-                {filtered.length} {filtered.length === 1 ? "Product" : "Products"} Found
+                {products.length} {products.length === 1 ? "Product" : "Products"} Found
               </span>
             </div>
           </div>
 
           <TabsContent value={tab} className="mt-8">
-            <Grid products={filtered} searchQuery={q} />
+            <Grid products={products} searchQuery={q} />
           </TabsContent>
         </Tabs>
       </div>

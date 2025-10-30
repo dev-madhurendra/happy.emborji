@@ -1,4 +1,4 @@
-import { CategoryCarousel } from "../../components/category-carousel";
+import { CategoryCarousel } from "../../components/item-carousel";
 import { Hero } from "../../components/hero";
 import { ProductGrid } from "../../components/product-grid";
 import { ReviewsMarquee } from "../../components/reviews-marquee";
