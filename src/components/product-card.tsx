@@ -23,7 +23,7 @@ type Product = {
   name: string;
   price: number;
   category: string;
-  tags: string[];
+  tag: "crochet" | "embroidery";
   image: string;
   images?: string[];
 };
@@ -44,13 +44,11 @@ export function ProductCard({ product }: { product: Product }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* New Badge */}
       <div className="absolute left-3 top-3 z-10 flex items-center gap-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
         <Sparkles className="h-3 w-3" />
         Handmade
       </div>
 
-      {/* Wishlist Button */}
       <button
         onClick={() => setIsWishlisted(!isWishlisted)}
         className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm transition-all hover:scale-110 hover:bg-white"
@@ -76,7 +74,6 @@ export function ProductCard({ product }: { product: Product }) {
                 isHovered ? "scale-110" : "scale-100"
               }`}
             />
-            {/* Hover Overlay */}
             <div
               className={`absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent transition-opacity duration-300 ${
                 isHovered ? "opacity-100" : "opacity-0"
@@ -94,7 +91,6 @@ export function ProductCard({ product }: { product: Product }) {
         </DialogTrigger>
 
         <div className="space-y-3 p-4">
-          {/* Rating */}
           <div className="flex items-center gap-1">
             {[1, 2, 3, 4, 5].map((i) => (
               <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
@@ -102,19 +98,16 @@ export function ProductCard({ product }: { product: Product }) {
             <span className="ml-1 text-xs text-muted-foreground">(5.0)</span>
           </div>
 
-          {/* Product Name */}
           <h3 className="line-clamp-2 text-base font-semibold leading-tight">
             {product.name}
           </h3>
 
-          {/* Category */}
           <div className="flex items-center gap-2">
             <span className="rounded-full bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700 capitalize">
               {product.category}
             </span>
           </div>
 
-          {/* Price */}
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-pink-600">
               Rs. {product.price.toFixed(2)}
@@ -127,7 +120,6 @@ export function ProductCard({ product }: { product: Product }) {
             </span>
           </div>
 
-          {/* Action Buttons */}
           <div className="grid grid-cols-2 gap-2 pt-2">
             <a
               href={whatsappHref}
@@ -207,7 +199,6 @@ export function ProductCard({ product }: { product: Product }) {
           </Carousel>
 
           <div className="space-y-4">
-            {/* Rating & Category */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map((i) => (
@@ -225,20 +216,18 @@ export function ProductCard({ product }: { product: Product }) {
               </span>
             </div>
 
-            {/* Price */}
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-bold text-pink-600">
-                ${product.price.toFixed(2)}
+                Rs. {product.price.toFixed(2)}
               </span>
               <span className="text-lg text-muted-foreground line-through">
-                ${(product.price * 1.3).toFixed(2)}
+                Rs. {(product.price * 1.3).toFixed(2)}
               </span>
               <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-700">
                 30% OFF
               </span>
             </div>
 
-            {/* Trust Badges */}
             <div className="flex flex-wrap gap-2">
               <div className="flex items-center gap-1 rounded-full border bg-pink-50 px-3 py-1 text-xs font-medium text-pink-700">
                 <Heart className="h-3 w-3" fill="currentColor" />
@@ -264,19 +253,12 @@ export function ProductCard({ product }: { product: Product }) {
               </div>
             </div>
 
-            {/* Tags */}
-            {product.tags?.length ? (
-              <div className="flex flex-wrap gap-2">
-                {product.tags.map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-full border-2 bg-background px-3 py-1 text-xs font-medium text-muted-foreground"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            ) : null}
+            <span
+              key={product.tag}
+              className="rounded-full border-2 bg-background px-3 py-1 text-xs font-medium text-muted-foreground"
+            >
+              {product.tag}
+            </span>
           </div>
 
           <DialogFooter className="gap-3 sm:justify-between">

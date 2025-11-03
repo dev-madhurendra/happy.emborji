@@ -5,7 +5,7 @@ interface ProductForm {
   name: string;
   price: string;
   category: string;
-  tags: string;
+  tag: string;
 }
 
 interface Message {
@@ -18,7 +18,7 @@ export default function AdminPage() {
     name: "",
     price: "",
     category: "",
-    tags: "",
+    tag: "",
   });
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -86,7 +86,7 @@ export default function AdminPage() {
 
       if (res.ok) {
         setMessage({ type: "success", text: "✓ Product added successfully!" });
-        setForm({ name: "", price: "", category: "", tags: "" });
+        setForm({ name: "", price: "", category: "", tag: "" });
         setFile(null);
         setPreview(null);
       } else {
@@ -137,7 +137,6 @@ export default function AdminPage() {
               </div>
             )}
 
-            {/* Product Name */}
             <div>
               <label className="block text-sm font-semibold text-foreground mb-2">
                 Product Name *
@@ -152,7 +151,6 @@ export default function AdminPage() {
               />
             </div>
 
-            {/* Price & Category */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-2">
@@ -160,7 +158,7 @@ export default function AdminPage() {
                 </label>
                 <input
                   name="price"
-                  placeholder="$0.00"
+                  placeholder="Rs 0.00"
                   value={form.price}
                   onChange={handleChange}
                   disabled={loading}
@@ -182,22 +180,20 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* Tags */}
             <div>
               <label className="block text-sm font-semibold text-foreground mb-2">
-                Tags (optional)
+                Tags 
               </label>
               <input
-                name="tags"
-                placeholder="Separate tags with commas"
-                value={form.tags}
+                name="tag"
+                placeholder="Embroidery or Crochet"
+                value={form.tag}
                 onChange={handleChange}
                 disabled={loading}
                 className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
 
-            {/* File Upload */}
             <div>
               <label className="block text-sm font-semibold text-foreground mb-2">
                 Product Image *
@@ -235,7 +231,6 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}

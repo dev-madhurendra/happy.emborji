@@ -1,81 +1,106 @@
-import { useState, useEffect } from "react"
-import { ProductCard } from "./product-card"
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
-import { Link } from "react-router-dom"
-import { Search, Sparkles, TrendingUp, Package, ChevronLeft, ChevronRight } from "lucide-react"
+import { useState, useEffect, useMemo } from "react";
+import { ProductCard } from "./product-card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Link } from "react-router-dom";
+import {
+  Search,
+  Sparkles,
+  TrendingUp,
+  Package,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { staticProducts } from "../data/products";
 
 type Product = {
-  _id: string
-  name: string
-  price: number
-  category: string | "embroidery" | "crochet"
-  tags: string[]
-  image: string
-  images?: string[]
-}
+  _id: string;
+  name: string;
+  price: number;
+  category: string;
+  tag: "embroidery" | "crochet";
+  image: string;
+  images?: string[];
+};
 
 type Props = {
-  initialTab?: "all" | "crochet" | "embroidery"
-  limit?: number
-  categoryTag?: string
-  showViewAll?: boolean
-}
+  initialTab?: "all" | "crochet" | "embroidery";
+  limit?: number;
+  categoryTag?: string;
+  showViewAll?: boolean;
+};
 
 export function ProductGrid({
   initialTab = "all",
-  limit = 8,
-  // categoryTag,
+  limit = 6,
+  categoryTag,
   showViewAll,
 }: Props) {
-  const [tab, setTab] = useState<"all" | "crochet" | "embroidery">(initialTab)
-  const [q, setQ] = useState("")
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [tab, setTab] = useState<"all" | "crochet" | "embroidery">(initialTab);
+  const [q, setQ] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    async function fetchProducts() {
-      setLoading(true)
+    const fetchProducts = async () => {
+      setLoading(true);
       try {
         const params = new URLSearchParams({
           page: page.toString(),
           limit: limit.toString(),
-        })
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products?${params}`)
-        const data = await res.json()
+        });
 
-        console.log(data)
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/products?${params}`
+        );
 
-        setProducts(data.products || [])
-        setTotalPages(data.totalPages || 1)
-      } catch (err) {
-        console.error("Error fetching products:", err)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data?.products.length == 0)
+          setProducts(staticProducts);
+        else 
+          setProducts(data?.products)
+        setTotalPages(data?.totalPages || Math.ceil(staticProducts.length / limit));
+      } catch (error) {
+        console.error("Error fetching products:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
+    };
+
+    fetchProducts();
+  }, [page, limit]);
+
+  const filtered = useMemo(() => {
+    let list: Product[] = products;
+
+    if (tab !== "all") {
+      list = list.filter((p) => p.tag === tab);
     }
-    fetchProducts()
-  }, [page, limit])
 
-  // const filtered = useMemo(() => {
-  //   let list: Product[] =
-  //     tab === "all" ? products : products.filter((p) => ["embroidery", "crochet"].includes(p.category))
+    if (categoryTag) {
+      list = list.filter(
+        (p) => p.category.toLowerCase() === categoryTag.toLowerCase()
+      );
+    }
 
-  //   if (categoryTag) list = list.filter((p) => p.tags?.includes(categoryTag))
-  //   if (q.trim()) {
-  //     const s = q.toLowerCase()
-  //     list = list.filter(
-  //       (p) =>
-  //         p.name.toLowerCase().includes(s) ||
-  //         p.tags?.some((t) => t.toLowerCase().includes(s))
-  //     )
-  //   }
-
-  //   return list
-  // }, [tab, q, categoryTag, products])
+    if (q.trim()) {
+      const s = q.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(s) ||
+          p.category.toLowerCase().includes(s) ||
+          p.tag.toLowerCase().includes(s)
+      );
+    }
+    return list;
+  }, [tab, q, products, categoryTag]);
 
   if (loading) {
     return (
@@ -85,17 +110,17 @@ export function ProductGrid({
             <div className="h-16 w-16 animate-spin rounded-full border-4 border-pink-200 border-t-pink-600"></div>
             <Sparkles className="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 animate-pulse text-pink-600" />
           </div>
-          <p className="text-lg font-medium text-muted-foreground">Loading amazing products...</p>
+          <p className="text-lg font-medium text-muted-foreground">
+            Loading amazing products...
+          </p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-8">
-      {/* Search and Filter Header */}
       <div className="mb-8 space-y-6">
-        {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -115,8 +140,11 @@ export function ProductGrid({
           )}
         </div>
 
-        {/* Category Tabs */}
-        <Tabs value={tab} onValueChange={(v) => setTab(v as any)} className="space-y-6">
+        <Tabs
+          value={tab}
+          onValueChange={(v) => setTab(v as any)}
+          className="space-y-6"
+        >
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <TabsList className="grid h-auto w-full grid-cols-3 gap-2 bg-transparent p-0 sm:w-auto">
               <TabsTrigger
@@ -151,22 +179,21 @@ export function ProductGrid({
               </TabsTrigger>
             </TabsList>
 
-            {/* Results Count */}
             <div className="flex items-center gap-2 rounded-xl border bg-background/80 px-4 py-2 backdrop-blur-sm">
               <Sparkles className="h-4 w-4 text-amber-500" />
               <span className="text-sm font-medium">
-                {products.length} {products.length === 1 ? "Product" : "Products"} Found
+                {products.length}{" "}
+                {products.length === 1 ? "Product" : "Products"} Found
               </span>
             </div>
           </div>
 
           <TabsContent value={tab} className="mt-8">
-            <Grid products={products} searchQuery={q} />
+            <Grid products={filtered} searchQuery={q} />
           </TabsContent>
         </Tabs>
       </div>
 
-      {/* Enhanced Pagination */}
       {totalPages > 1 && (
         <div className="mt-12 flex flex-col items-center gap-6">
           <div className="flex items-center gap-3">
@@ -181,7 +208,6 @@ export function ProductGrid({
               Previous
             </Button>
 
-            {/* Page Numbers */}
             <div className="flex items-center gap-2">
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let pageNum;
@@ -226,13 +252,13 @@ export function ProductGrid({
           </div>
 
           <span className="text-sm text-muted-foreground">
-            Showing page <span className="font-semibold text-foreground">{page}</span> of{" "}
+            Showing page{" "}
+            <span className="font-semibold text-foreground">{page}</span> of{" "}
             <span className="font-semibold text-foreground">{totalPages}</span>
           </span>
         </div>
       )}
 
-      {/* View All Button */}
       {showViewAll && (
         <div className="mt-12 text-center">
           <Button
@@ -248,10 +274,16 @@ export function ProductGrid({
         </div>
       )}
     </section>
-  )
+  );
 }
 
-function Grid({ products, searchQuery }: { products: Product[]; searchQuery: string }) {
+function Grid({
+  products,
+  searchQuery,
+}: {
+  products: Product[];
+  searchQuery: string;
+}) {
   if (!products.length) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center space-y-6 rounded-3xl border-2 border-dashed bg-gradient-to-br from-pink-50/50 to-purple-50/50 p-12">
@@ -261,7 +293,7 @@ function Grid({ products, searchQuery }: { products: Product[]; searchQuery: str
           </div>
           <Sparkles className="absolute -right-2 -top-2 h-8 w-8 text-amber-500" />
         </div>
-        
+
         <div className="text-center">
           <h3 className="mb-2 text-2xl font-bold">No Products Found</h3>
           <p className="max-w-md text-muted-foreground">
@@ -282,18 +314,17 @@ function Grid({ products, searchQuery }: { products: Product[]; searchQuery: str
           </Button>
         )}
       </div>
-    )
+    );
   }
 
   return (
     <>
-      {/* Products Count Header */}
       <div className="mb-6 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-muted-foreground">
-          Showing {products.length} amazing {products.length === 1 ? "product" : "products"}
+          Showing {products.length} amazing{" "}
+          {products.length === 1 ? "product" : "products"}
         </h3>
-        
-        {/* Sort Options - Optional */}
+
         <div className="flex items-center gap-2 text-sm">
           <span className="text-muted-foreground">Sort by:</span>
           <select className="rounded-lg border-2 bg-background px-3 py-2 font-medium outline-none focus:border-pink-500">
@@ -305,7 +336,6 @@ function Grid({ products, searchQuery }: { products: Product[]; searchQuery: str
         </div>
       </div>
 
-      {/* Products Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {products.map((p, index) => (
           <div
@@ -318,7 +348,6 @@ function Grid({ products, searchQuery }: { products: Product[]; searchQuery: str
         ))}
       </div>
 
-      {/* Quick Stats Banner */}
       <div className="mt-12 overflow-hidden rounded-3xl bg-gradient-to-r from-pink-100 via-purple-100 to-amber-100 p-8">
         <div className="grid gap-6 text-center md:grid-cols-3">
           <div>
@@ -353,5 +382,5 @@ function Grid({ products, searchQuery }: { products: Product[]; searchQuery: str
         }
       `}</style>
     </>
-  )
+  );
 }
