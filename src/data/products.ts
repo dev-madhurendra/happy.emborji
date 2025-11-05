@@ -5,6 +5,7 @@ export type Product = {
   category: string  // For carousel: "Dolls", "Keychains", "Hoop Art", etc.
   tag: "embroidery" | "crochet"  // Main category
   image: string
+  description?: string
   images?: string[]
 }
 

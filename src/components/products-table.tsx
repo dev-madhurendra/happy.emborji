@@ -17,6 +17,7 @@ interface Product {
   price: number;
   category: string;
   tag: string;
+  description?: string;
   image?: string;
 }
 
@@ -25,6 +26,7 @@ interface ProductFormData {
   price: string;
   category: string;
   tag: string;
+  description?: string;
 }
 
 export default function ProductTable() {
@@ -182,6 +184,7 @@ export default function ProductTable() {
             price: formData.price,
             category: formData.category,
             tag: formData.tag,
+            description: formData.description
           })
         : null;
 
@@ -257,6 +260,7 @@ export default function ProductTable() {
               <th className="p-3">Category</th>
               <th className="p-3">Price</th>
               <th className="p-3">Tag</th>
+              <th className="p-3">Description</th>
               <th className="p-3 text-right">Actions</th>
             </tr>
           </thead>
@@ -283,6 +287,7 @@ export default function ProductTable() {
                 <td className="p-3">{p.category}</td>
                 <td className="p-3">₹{p.price}</td>
                 <td className="p-3">{p.tag || "-"}</td>
+                <td className="p-3">{p.description || "-"}</td>
                 <td className="p-3 text-right space-x-2">
                   <button
                     onClick={() => openEditModal(p)}
@@ -319,8 +324,7 @@ export default function ProductTable() {
               disabled={page === 1}
               className="group h-12 border-2 px-6 disabled:opacity-50"
             >
-              <ChevronLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-              Previous
+              <ChevronLeft className="transition-transform group-hover:-translate-x-1" />
             </Button>
 
             <div className="flex items-center gap-2">
@@ -337,7 +341,7 @@ export default function ProductTable() {
                     variant={page === pageNum ? "default" : "outline"}
                     size="icon"
                     onClick={() => setPage(pageNum)}
-                    className={`h-12 w-12 border-2 font-semibold transition-all ${
+                    className={`border-2 font-semibold transition-all ${
                       page === pageNum
                         ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg shadow-pink-500/30"
                         : "hover:border-pink-400"
@@ -356,8 +360,7 @@ export default function ProductTable() {
               disabled={page === totalPages}
               className="group h-12 border-2 px-6 disabled:opacity-50"
             >
-              Next
-              <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <ChevronRight className="transition-transform group-hover:translate-x-1" />
             </Button>
           </div>
 
@@ -457,6 +460,20 @@ export default function ProductTable() {
                   <option value="Crochet">Crochet</option>
                   <option value="Embroidery">Embroidery</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Description</label>
+                <input
+                  type="text"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="e.g. Crochet Book Cover For Nerd People"
+                  disabled={submitting}
+                />
               </div>
 
               <div>

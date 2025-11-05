@@ -6,6 +6,7 @@ interface ProductForm {
   price: string;
   category: string;
   tag: string;
+  description?: string;
 }
 
 interface Message {
@@ -19,6 +20,7 @@ export default function AddProduct() {
     price: "",
     category: "",
     tag: "",
+    description: "",
   });
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -86,7 +88,13 @@ export default function AddProduct() {
 
       if (res.ok) {
         setMessage({ type: "success", text: "✓ Product added successfully!" });
-        setForm({ name: "", price: "", category: "", tag: "" });
+        setForm({
+          name: "",
+          price: "",
+          category: "",
+          tag: "",
+          description: "",
+        });
         setFile(null);
         setPreview(null);
       } else {
@@ -182,12 +190,26 @@ export default function AddProduct() {
 
             <div>
               <label className="block text-sm font-semibold text-foreground mb-2">
-                Tags 
+                Tags
               </label>
               <input
                 name="tag"
                 placeholder="Embroidery or Crochet"
                 value={form.tag}
+                onChange={handleChange}
+                disabled={loading}
+                className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-foreground mb-2">
+                Product Description (Optional)
+              </label>
+              <input
+                name="description"
+                placeholder="Enter product description"
+                value={form.name}
                 onChange={handleChange}
                 disabled={loading}
                 className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"

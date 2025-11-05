@@ -188,8 +188,7 @@ export function ProductGrid({
               disabled={page === 1}
               className="group h-12 border-2 px-6 disabled:opacity-50"
             >
-              <ChevronLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-              Previous
+              <ChevronLeft className="transition-transform group-hover:-translate-x-1" />
             </Button>
 
             <div className="flex items-center gap-2">
@@ -230,8 +229,7 @@ export function ProductGrid({
               disabled={page === totalPages}
               className="group h-12 border-2 px-6 disabled:opacity-50"
             >
-              Next
-              <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <ChevronRight className="transition-transform group-hover:translate-x-1" />
             </Button>
           </div>
 
