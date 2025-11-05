@@ -117,7 +117,7 @@ export default function ProductsPage(
       </section>
 
       {/* Product Grid */}
-      <ProductGrid initialTab="all" categoryTag={tag} />
+      <ProductGrid initialTab="all" />
 
       {/* Why Choose Us Section */}
       <section className="mx-auto max-w-7xl px-4 py-16">
