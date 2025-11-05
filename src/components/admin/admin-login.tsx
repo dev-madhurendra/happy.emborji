@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ChangeEvent } from "react";
 import { Loader, Lock, AlertCircle, Check, ArrowLeft } from "lucide-react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface Message {
   type: "success" | "error" | "info";
