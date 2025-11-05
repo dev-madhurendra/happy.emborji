@@ -7,7 +7,6 @@ import ReviewsPage from "./pages/reviews/page";
 import HomePage from "./pages/home/page";
 import AdminLogin from "./components/admin/admin-login";
 import ProtectedRoute from "./components/protected-route";
-import AdminPage from "./components/admin/add-product";
 import AdminDashboard from "./components/admin/admin-dashboard";
 
 function App() {
