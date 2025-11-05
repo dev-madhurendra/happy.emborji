@@ -27,7 +27,7 @@ export function CategoryCarousel() {
           `${import.meta.env.VITE_API_BASE_URL}/api/categories`
         );
         const data = await res.json();
-        if (data.products.length > 0)
+        if (data)
           setCategories(data);
         else 
           setCategories(staticCategories)

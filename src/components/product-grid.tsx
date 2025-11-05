@@ -62,11 +62,11 @@ export function ProductGrid({
         }
 
         const data = await response.json();
-        if (data?.products.length == 0)
-          setProducts(staticProducts);
-        else 
-          setProducts(data?.products)
-        setTotalPages(data?.totalPages || Math.ceil(staticProducts.length / limit));
+        if (data?.products.length == 0) setProducts(staticProducts);
+        else setProducts(data?.products);
+        setTotalPages(
+          data?.totalPages || Math.ceil(staticProducts.length / limit)
+        );
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -81,26 +81,12 @@ export function ProductGrid({
     let list: Product[] = products;
 
     if (tab !== "all") {
-      list = list.filter((p) => p.tag === tab);
+      const tabValue = tab.trim().toLowerCase();
+      list = list.filter((p) => p.tag?.trim().toLowerCase() === tabValue);
     }
 
-    if (categoryTag) {
-      list = list.filter(
-        (p) => p.category.toLowerCase() === categoryTag.toLowerCase()
-      );
-    }
-
-    if (q.trim()) {
-      const s = q.toLowerCase();
-      list = list.filter(
-        (p) =>
-          p.name.toLowerCase().includes(s) ||
-          p.category.toLowerCase().includes(s) ||
-          p.tag.toLowerCase().includes(s)
-      );
-    }
     return list;
-  }, [tab, q, products, categoryTag]);
+  }, [tab, products]);
 
   if (loading) {
     return (

@@ -40,7 +40,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <Card
-      className="group relative overflow-hidden border-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-500/20"
+      className="group relative flex flex-col justify-between overflow-hidden border-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-500/20"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -63,7 +63,7 @@ export function ProductCard({ product }: { product: Product }) {
 
       <Dialog>
         <DialogTrigger asChild>
-          <button className="relative aspect-square w-full overflow-hidden bg-gray-100">
+          <button className="relative h-60 w-full overflow-hidden bg-gray-100 flex-shrink-0">
             <img
               src={
                 images[0] ||
