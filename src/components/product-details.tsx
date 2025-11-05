@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Loader, ArrowLeft, ShoppingCart, Package, Star } from "lucide-react";
+import { Loader, ArrowLeft, Package, Star } from "lucide-react";
 import type { Product } from "../data/products";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
