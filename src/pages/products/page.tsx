@@ -4,7 +4,8 @@ import { Sparkles, Heart, Package, Star, TrendingUp } from "lucide-react"
 export default function ProductsPage(
   { searchParams }: { searchParams?: { category?: string } }
 ): React.ReactElement {
-  // const tag = searchParams?.category
+  const tag = searchParams?.category
+  console.log(tag);
   
   return (
     <div className="relative overflow-hidden">
