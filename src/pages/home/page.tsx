@@ -16,7 +16,7 @@ export default function HomePage() {
 
       <section className="mx-auto max-w-7xl px-4 py-8">
         <h2 className="mb-4 font-serif text-2xl font-semibold">Featured Products</h2>
-        <ProductGrid initialTab="all" limit={8} showViewAll={true} />
+        <ProductGrid initialTab="all" limit={6} showViewAll={true} />
       </section>
 
       {/* Customer Reviews */}

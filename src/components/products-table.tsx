@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react";
-import { Edit, Trash2, Plus, Loader, X, Upload } from "lucide-react";
+import {
+  Edit,
+  Trash2,
+  Plus,
+  Loader,
+  X,
+  Upload,
+  ChevronRight,
+  ChevronLeft,
+} from "lucide-react";
+import { Button } from "./ui/button";
 
 interface Product {
   _id: string;
@@ -32,19 +42,19 @@ export default function ProductTable() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("adminToken");
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: "6",
+      });
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/products`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `${import.meta.env.VITE_API_BASE_URL}/api/products?${params}`
       );
 
       if (res.status === 401)
@@ -53,6 +63,7 @@ export default function ProductTable() {
 
       const data = await res.json();
       setProducts(data.products);
+      setTotalPages(data?.totalPages);
     } catch (err: any) {
       setError(err.message || "Error loading products");
     } finally {
@@ -151,43 +162,39 @@ export default function ProductTable() {
       return;
     }
 
-    // Validate image for new products
-    if (!editingProduct && !file) {
-      alert("Please select an image for the product");
-      return;
-    }
-
     setSubmitting(true);
 
     try {
       const token = localStorage.getItem("adminToken");
-      const url = editingProduct
+      const isEdit = editingProduct;
+
+      const url = isEdit
         ? `${import.meta.env.VITE_API_BASE_URL}/api/products/${
             editingProduct._id
           }`
         : `${import.meta.env.VITE_API_BASE_URL}/api/addProduct`;
 
-      const method = editingProduct ? "PUT" : "POST";
+      const method = isEdit ? "PUT" : "POST";
 
-      // Create FormData to handle file upload
-      const formDataToSend = new FormData();
-      formDataToSend.append("name", formData.name);
-      formDataToSend.append("price", formData.price);
-      formDataToSend.append("category", formData.category);
-      formDataToSend.append("tag", formData.tag);
-      
-      // Append file if selected
-      if (file) {
-        formDataToSend.append("image", file);
-      }
+      const body = isEdit
+        ? JSON.stringify({
+            name: formData.name,
+            price: formData.price,
+            category: formData.category,
+            tag: formData.tag,
+          })
+        : null;
 
-      const res = await fetch(url, {
+      const options: RequestInit = {
         method,
         headers: {
           Authorization: `Bearer ${token}`,
+          ...(isEdit ? { "Content-Type": "application/json" } : {}),
         },
-        body: formDataToSend,
-      });
+        ...(isEdit ? { body } : { body: createFormData(formData, file) }),
+      };
+
+      const res = await fetch(url, options);
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -195,9 +202,7 @@ export default function ProductTable() {
       }
 
       alert(
-        editingProduct
-          ? "Product updated successfully!"
-          : "Product added successfully!"
+        isEdit ? "Product updated successfully!" : "Product added successfully!"
       );
       await fetchProducts();
       closeModal();
@@ -208,9 +213,19 @@ export default function ProductTable() {
     }
   };
 
+  function createFormData(formData: any, file: File | null) {
+    const fd = new FormData();
+    fd.append("name", formData.name);
+    fd.append("price", formData.price);
+    fd.append("category", formData.category);
+    fd.append("tag", formData.tag);
+    if (file) fd.append("image", file);
+    return fd;
+  }
+
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [page]);
 
   if (loading)
     return (
@@ -294,6 +309,66 @@ export default function ProductTable() {
         )}
       </div>
 
+      {totalPages > 1 && (
+        <div className="mt-10 flex flex-col items-center gap-6">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="group h-12 border-2 px-6 disabled:opacity-50"
+            >
+              <ChevronLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+              Previous
+            </Button>
+
+            <div className="flex items-center gap-2">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) pageNum = i + 1;
+                else if (page <= 3) pageNum = i + 1;
+                else if (page >= totalPages - 2) pageNum = totalPages - 4 + i;
+                else pageNum = page - 2 + i;
+
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={page === pageNum ? "default" : "outline"}
+                    size="icon"
+                    onClick={() => setPage(pageNum)}
+                    className={`h-12 w-12 border-2 font-semibold transition-all ${
+                      page === pageNum
+                        ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg shadow-pink-500/30"
+                        : "hover:border-pink-400"
+                    }`}
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+            </div>
+
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="group h-12 border-2 px-6 disabled:opacity-50"
+            >
+              Next
+              <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Button>
+          </div>
+
+          <span className="text-sm text-muted-foreground">
+            Showing page{" "}
+            <span className="font-semibold text-foreground">{page}</span> of{" "}
+            <span className="font-semibold text-foreground">{totalPages}</span>
+          </span>
+        </div>
+      )}
+
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -349,29 +424,39 @@ export default function ProductTable() {
                   Category *
                 </label>
                 <input
+                  list="category-options"
                   type="text"
                   value={formData.category}
                   onChange={(e) =>
                     setFormData({ ...formData, category: e.target.value })
                   }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter category"
+                  placeholder="e.g. Flower pot, Tshirt, Book cover"
                   disabled={submitting}
                 />
+                <datalist id="category-options">
+                  {Array.from(
+                    new Set(products.map((p) => p.category.trim()))
+                  ).map((cat) => (
+                    <option key={cat} value={cat} />
+                  ))}
+                </datalist>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Tag</label>
-                <input
-                  type="text"
+                <label className="block text-sm font-medium mb-1">Tag *</label>
+                <select
                   value={formData.tag}
                   onChange={(e) =>
                     setFormData({ ...formData, tag: e.target.value })
                   }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter tag (optional)"
                   disabled={submitting}
-                />
+                >
+                  <option value="">Select Tag</option>
+                  <option value="Crochet">Crochet</option>
+                  <option value="Embroidery">Embroidery</option>
+                </select>
               </div>
 
               <div>
