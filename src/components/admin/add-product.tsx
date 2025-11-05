@@ -13,7 +13,7 @@ interface Message {
   text: string;
 }
 
-export default function AdminPage() {
+export default function AddProduct() {
   const [form, setForm] = useState<ProductForm>({
     name: "",
     price: "",

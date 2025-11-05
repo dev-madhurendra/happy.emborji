@@ -5,7 +5,10 @@ import EmbroideryPage from "./pages/embroidery/page";
 import ProductsPage from "./pages/products/page";
 import ReviewsPage from "./pages/reviews/page";
 import HomePage from "./pages/home/page";
-import AddProduct from "./components/admin/add-product";
+import AdminLogin from "./components/admin/admin-login";
+import ProtectedRoute from "./components/protected-route";
+import AdminPage from "./components/admin/add-product";
+import AdminDashboard from "./components/admin/admin-dashboard";
 
 function App() {
   return (
@@ -16,7 +19,10 @@ function App() {
       <Route path="/crochet" element={<CrochetPage />} />
       <Route path="/embroidery" element={<EmbroideryPage />} />
       <Route path="/reviews" element={<ReviewsPage />} />
-      <Route path="/admin" element={<AddProduct />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      </Route>
     </Routes>
   );
 }
