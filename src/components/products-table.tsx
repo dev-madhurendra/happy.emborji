@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Edit, Trash2, Plus, Loader, X, Upload } from "lucide-react";
+import { Edit, Trash2, Plus, Loader, X } from "lucide-react";
 
 interface Product {
   _id: string;
@@ -29,8 +29,8 @@ export default function ProductTable() {
     category: "",
     tag: "",
   });
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+//   const [file, setFile] = useState<File | null>(null);
+//   const [preview, setPreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const fetchProducts = async () => {
@@ -88,8 +88,8 @@ export default function ProductTable() {
       category: "",
       tag: "",
     });
-    setFile(null);
-    setPreview(null);
+    // setFile(null);
+    // setPreview(null);
     setShowModal(true);
   };
 
@@ -101,8 +101,8 @@ export default function ProductTable() {
       category: product.category,
       tag: product.tag || "",
     });
-    setFile(null);
-    setPreview(product.image || null);
+    // setFile(null);
+    // setPreview(product.image || null);
     setShowModal(true);
   };
 
@@ -115,8 +115,8 @@ export default function ProductTable() {
       category: "",
       tag: "",
     });
-    setFile(null);
-    setPreview(null);
+    // setFile(null);
+    // setPreview(null);
   };
 
   //   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
