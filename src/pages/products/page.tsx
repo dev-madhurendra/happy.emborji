@@ -5,6 +5,7 @@ export default function ProductsPage(
   { searchParams }: { searchParams?: { category?: string } }
 ): React.ReactElement {
   const tag = searchParams?.category
+  console.log(tag);
   
   return (
     <div className="relative overflow-hidden">
@@ -117,7 +118,7 @@ export default function ProductsPage(
       </section>
 
       {/* Product Grid */}
-      <ProductGrid initialTab="all" categoryTag={tag} />
+      <ProductGrid initialTab="all" />
 
       {/* Why Choose Us Section */}
       <section className="mx-auto max-w-7xl px-4 py-16">
