@@ -27,14 +27,12 @@ type Product = {
 type Props = {
   initialTab?: "all" | "crochet" | "embroidery";
   limit?: number;
-  categoryTag?: string;
   showViewAll?: boolean;
 };
 
 export function ProductGrid({
   initialTab = "all",
   limit = 6,
-  categoryTag,
   showViewAll,
 }: Props) {
   const [tab, setTab] = useState<"all" | "crochet" | "embroidery">(initialTab);
