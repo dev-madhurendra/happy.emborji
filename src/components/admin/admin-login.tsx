@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ChangeEvent } from "react";
-import { Loader, Lock, AlertCircle, Check } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Loader, Lock, AlertCircle, Check, ArrowLeft } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 
 interface Message {
   type: "success" | "error" | "info";
@@ -26,11 +26,14 @@ export default function AdminLogin() {
     setMessage(null);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/admin/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        }
+      );
 
       const data = await res.json();
 
@@ -39,7 +42,10 @@ export default function AdminLogin() {
         setMessage({ type: "success", text: "Login successful!" });
         setTimeout(() => navigate("/admin/dashboard"), 1000);
       } else {
-        setMessage({ type: "error", text: data.error || "Invalid credentials" });
+        setMessage({
+          type: "error",
+          text: data.error || "Invalid credentials",
+        });
       }
     } catch {
       setMessage({ type: "error", text: "Server connection error" });
@@ -49,7 +55,7 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-4">
+    <div className="min-h-screen flex direction-column items-center justify-center bg-background text-foreground p-4">
       <div className="w-full max-w-md bg-card border border-border rounded-lg shadow-md p-6 space-y-6">
         <div className="flex flex-col items-center">
           <Lock className="w-12 h-12 text-primary mb-2" />
@@ -82,7 +88,9 @@ export default function AdminLogin() {
             <input
               type="text"
               value={username}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setUsername(e.target.value)
+              }
               disabled={loading}
               className="w-full px-3 py-2 border border-border rounded-md bg-input text-foreground focus:ring-2 focus:ring-ring focus:outline-none"
             />
@@ -93,7 +101,9 @@ export default function AdminLogin() {
             <input
               type="password"
               value={password}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
               disabled={loading}
               className="w-full px-3 py-2 border border-border rounded-md bg-input text-foreground focus:ring-2 focus:ring-ring focus:outline-none"
             />
@@ -113,6 +123,16 @@ export default function AdminLogin() {
             )}
           </button>
         </form>
+
+        <div className="pt-4 border-t border-border text-center hover:text-primary">
+          <button
+            onClick={() => navigate("/")}
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition font-medium"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </button>
+        </div>
       </div>
     </div>
   );
