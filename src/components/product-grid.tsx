@@ -162,14 +162,6 @@ export function ProductGrid({
                 )}
               </TabsTrigger>
             </TabsList>
-
-            <div className="flex items-center gap-2 rounded-xl border bg-background/80 px-4 py-2 backdrop-blur-sm">
-              <Sparkles className="h-4 w-4 text-amber-500" />
-              <span className="text-sm font-medium">
-                {products.length}{" "}
-                {products.length === 1 ? "Product" : "Products"} Found
-              </span>
-            </div>
           </div>
 
           <TabsContent value={tab} className="mt-8">
@@ -179,30 +171,39 @@ export function ProductGrid({
       </div>
 
       {totalPages > 1 && (
-        <div className="mt-12 flex flex-col items-center gap-6">
-          <div className="flex items-center gap-3">
+        <div className="mt-6 flex flex-col items-center gap-2">
+          <div className="flex items-center gap-1">
             <Button
               variant="outline"
-              size="lg"
+              size="icon"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="group h-12 border-2 px-6 disabled:opacity-50"
+              className="h-8 w-8 p-0"
             >
-              <ChevronLeft className="transition-transform group-hover:-translate-x-1" />
+              <ChevronLeft className="h-4 w-4" />
             </Button>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-0.5">
+              {page > 3 && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setPage(1)}
+                    className="h-8 w-8 text-sm"
+                  >
+                    1
+                  </Button>
+                  {page > 4 && <span className="px-1 text-gray-400">…</span>}
+                </>
+              )}
+
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let pageNum;
-                if (totalPages <= 5) {
-                  pageNum = i + 1;
-                } else if (page <= 3) {
-                  pageNum = i + 1;
-                } else if (page >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i;
-                } else {
-                  pageNum = page - 2 + i;
-                }
+                if (totalPages <= 5) pageNum = i + 1;
+                else if (page <= 3) pageNum = i + 1;
+                else if (page >= totalPages - 2) pageNum = totalPages - 4 + i;
+                else pageNum = page - 2 + i;
 
                 return (
                   <Button
@@ -210,9 +211,9 @@ export function ProductGrid({
                     variant={page === pageNum ? "default" : "outline"}
                     size="icon"
                     onClick={() => setPage(pageNum)}
-                    className={`h-12 w-12 border-2 font-semibold ${
+                    className={`h-8 w-8 text-sm ${
                       page === pageNum
-                        ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg shadow-pink-500/30"
+                        ? "bg-pink-600 text-white hover:bg-pink-700"
                         : ""
                     }`}
                   >
@@ -220,23 +221,38 @@ export function ProductGrid({
                   </Button>
                 );
               })}
+
+              {page < totalPages - 2 && (
+                <>
+                  {page < totalPages - 3 && (
+                    <span className="px-1 text-gray-400">…</span>
+                  )}
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setPage(totalPages)}
+                    className="h-8 w-8 text-sm"
+                  >
+                    {totalPages}
+                  </Button>
+                </>
+              )}
             </div>
 
             <Button
               variant="outline"
-              size="lg"
+              size="icon"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="group h-12 border-2 px-6 disabled:opacity-50"
+              className="h-8 w-8 p-0"
             >
-              <ChevronRight className="transition-transform group-hover:translate-x-1" />
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
 
-          <span className="text-sm text-muted-foreground">
-            Showing page{" "}
-            <span className="font-semibold text-foreground">{page}</span> of{" "}
-            <span className="font-semibold text-foreground">{totalPages}</span>
+          <span className="text-xs text-gray-500">
+            Page <span className="font-medium text-gray-700">{page}</span> of{" "}
+            <span className="font-medium text-gray-700">{totalPages}</span>
           </span>
         </div>
       )}
@@ -301,7 +317,7 @@ function Grid({
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
+      {/* <div className="mb-6 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-muted-foreground">
           Showing {products.length} amazing{" "}
           {products.length === 1 ? "product" : "products"}
@@ -316,9 +332,9 @@ function Grid({
             <option>Newest First</option>
           </select>
         </div>
-      </div>
+      </div> */}
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {products.map((p, index) => (
           <div
             key={p._id}

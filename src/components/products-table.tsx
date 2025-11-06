@@ -8,6 +8,8 @@ import {
   Upload,
   ChevronRight,
   ChevronLeft,
+  Filter,
+  RotateCcw,
 } from "lucide-react";
 import { Button } from "./ui/button";
 
@@ -29,6 +31,14 @@ interface ProductFormData {
   description?: string;
 }
 
+interface Filters {
+  search: string;
+  category: string;
+  tag: string;
+  minPrice: string;
+  maxPrice: string;
+}
+
 export default function ProductTable() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,6 +56,14 @@ export default function ProductTable() {
   const [submitting, setSubmitting] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState<Filters>({
+    search: "",
+    category: "",
+    tag: "",
+    minPrice: "",
+    maxPrice: "",
+  });
 
   const fetchProducts = async () => {
     try {
@@ -54,6 +72,13 @@ export default function ProductTable() {
         page: page.toString(),
         limit: "6",
       });
+
+      // Add filter params if they exist
+      if (filters.search) params.append("search", filters.search);
+      if (filters.category) params.append("category", filters.category);
+      if (filters.tag) params.append("tag", filters.tag);
+      if (filters.minPrice) params.append("minPrice", filters.minPrice);
+      if (filters.maxPrice) params.append("maxPrice", filters.maxPrice);
 
       const res = await fetch(
         `${import.meta.env.VITE_API_BASE_URL}/api/products?${params}`
@@ -139,13 +164,11 @@ export default function ProductTable() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      // Validate file size (10MB max)
       if (selectedFile.size > 10 * 1024 * 1024) {
         alert("File size must be less than 10MB");
         return;
       }
 
-      // Validate file type
       if (!selectedFile.type.startsWith("image/")) {
         alert("Please select a valid image file");
         return;
@@ -184,7 +207,7 @@ export default function ProductTable() {
             price: formData.price,
             category: formData.category,
             tag: formData.tag,
-            description: formData.description
+            description: formData.description,
           })
         : null;
 
@@ -226,9 +249,45 @@ export default function ProductTable() {
     return fd;
   }
 
+  const handleFilterChange = (key: keyof Filters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const applyFilters = () => {
+    setPage(1);
+    fetchProducts();
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      search: "",
+      category: "",
+      tag: "",
+      minPrice: "",
+      maxPrice: "",
+    });
+    setPage(1);
+  };
+
+  const getUniqueCategories = () => {
+    return Array.from(new Set(products.map((p) => p.category.trim()))).sort();
+  };
+
   useEffect(() => {
     fetchProducts();
   }, [page]);
+
+  useEffect(() => {
+    if (
+      !filters.search &&
+      !filters.category &&
+      !filters.tag &&
+      !filters.minPrice &&
+      !filters.maxPrice
+    ) {
+      fetchProducts();
+    }
+  }, [filters]);
 
   if (loading)
     return (
@@ -242,14 +301,142 @@ export default function ProductTable() {
   return (
     <>
       <div className="overflow-x-auto bg-white border border-gray-200 rounded-lg shadow-sm">
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold">All Products</h2>
-          <button
-            onClick={openAddModal}
-            className="flex items-center gap-2 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600"
-          >
-            <Plus className="w-4 h-4" /> Add Product
-          </button>
+        <div className="p-4 border-b border-gray-200 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">All Products</h2>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition ${
+                  showFilters
+                    ? "bg-blue-50 border-blue-500 text-blue-600"
+                    : "border-gray-300 hover:bg-gray-50"
+                }`}
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+              </button>
+              <button
+                onClick={openAddModal}
+                className="flex items-center gap-2 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600"
+              >
+                <Plus className="w-4 h-4" /> Add Product
+              </button>
+            </div>
+          </div>
+
+          {/* Filter Panel */}
+          {showFilters && (
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Search */}
+                {/* <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">
+                    Search
+                  </label>
+                  <div className="relative">
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input
+                      type="text"
+                      value={filters.search}
+                      onChange={(e) =>
+                        handleFilterChange("search", e.target.value)
+                      }
+                      placeholder="Search products..."
+                      className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div> */}
+
+                {/* Category */}
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">
+                    Category
+                  </label>
+                  <select
+                    value={filters.category}
+                    onChange={(e) =>
+                      handleFilterChange("category", e.target.value)
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">All Categories</option>
+                    {getUniqueCategories().map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Tag */}
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">
+                    Tag
+                  </label>
+                  <select
+                    value={filters.tag}
+                    onChange={(e) => handleFilterChange("tag", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">All Tags</option>
+                    <option value="Crochet">Crochet</option>
+                    <option value="Embroidery">Embroidery</option>
+                  </select>
+                </div>
+
+                {/* Min Price */}
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">
+                    Min Price (₹)
+                  </label>
+                  <input
+                    type="number"
+                    value={filters.minPrice}
+                    onChange={(e) =>
+                      handleFilterChange("minPrice", e.target.value)
+                    }
+                    placeholder="0"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                {/* Max Price */}
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">
+                    Max Price (₹)
+                  </label>
+                  <input
+                    type="number"
+                    value={filters.maxPrice}
+                    onChange={(e) =>
+                      handleFilterChange("maxPrice", e.target.value)
+                    }
+                    placeholder="10000"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={resetFilters}
+                  className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-white transition"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Reset
+                </button>
+                <button
+                  onClick={applyFilters}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                >
+                  <Filter className="w-4 h-4" />
+                  Apply Filters
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <table className="w-full text-left border-collapse">
@@ -315,19 +502,35 @@ export default function ProductTable() {
       </div>
 
       {totalPages > 1 && (
-        <div className="mt-10 flex flex-col items-center gap-6">
-          <div className="flex items-center gap-3">
+        <div className="mt-6 flex flex-col items-center gap-2">
+          <div className="flex items-center gap-1">
+            {/* Prev */}
             <Button
               variant="outline"
-              size="lg"
+              size="icon"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="group h-12 border-2 px-6 disabled:opacity-50"
+              className="h-8 w-8 p-0"
             >
-              <ChevronLeft className="transition-transform group-hover:-translate-x-1" />
+              <ChevronLeft className="h-4 w-4" />
             </Button>
 
-            <div className="flex items-center gap-2">
+            {/* Page Numbers */}
+            <div className="flex items-center gap-0.5">
+              {page > 3 && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setPage(1)}
+                    className="h-8 w-8 text-sm"
+                  >
+                    1
+                  </Button>
+                  {page > 4 && <span className="px-1 text-gray-400">…</span>}
+                </>
+              )}
+
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 let pageNum;
                 if (totalPages <= 5) pageNum = i + 1;
@@ -341,33 +544,49 @@ export default function ProductTable() {
                     variant={page === pageNum ? "default" : "outline"}
                     size="icon"
                     onClick={() => setPage(pageNum)}
-                    className={`border-2 font-semibold transition-all ${
+                    className={`h-8 w-8 text-sm ${
                       page === pageNum
-                        ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg shadow-pink-500/30"
-                        : "hover:border-pink-400"
+                        ? "bg-pink-600 text-white hover:bg-pink-700"
+                        : ""
                     }`}
                   >
                     {pageNum}
                   </Button>
                 );
               })}
+
+              {page < totalPages - 2 && (
+                <>
+                  {page < totalPages - 3 && (
+                    <span className="px-1 text-gray-400">…</span>
+                  )}
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setPage(totalPages)}
+                    className="h-8 w-8 text-sm"
+                  >
+                    {totalPages}
+                  </Button>
+                </>
+              )}
             </div>
 
+            {/* Next */}
             <Button
               variant="outline"
-              size="lg"
+              size="icon"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="group h-12 border-2 px-6 disabled:opacity-50"
+              className="h-8 w-8 p-0"
             >
-              <ChevronRight className="transition-transform group-hover:translate-x-1" />
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
 
-          <span className="text-sm text-muted-foreground">
-            Showing page{" "}
-            <span className="font-semibold text-foreground">{page}</span> of{" "}
-            <span className="font-semibold text-foreground">{totalPages}</span>
+          <span className="text-xs text-gray-500">
+            Page <span className="font-medium text-gray-700">{page}</span> of{" "}
+            <span className="font-medium text-gray-700">{totalPages}</span>
           </span>
         </div>
       )}
@@ -438,9 +657,7 @@ export default function ProductTable() {
                   disabled={submitting}
                 />
                 <datalist id="category-options">
-                  {Array.from(
-                    new Set(products.map((p) => p.category.trim()))
-                  ).map((cat) => (
+                  {getUniqueCategories().map((cat) => (
                     <option key={cat} value={cat} />
                   ))}
                 </datalist>
@@ -463,7 +680,9 @@ export default function ProductTable() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
+                <label className="block text-sm font-medium mb-1">
+                  Description
+                </label>
                 <input
                   type="text"
                   value={formData.description}

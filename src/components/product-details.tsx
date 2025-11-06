@@ -4,7 +4,7 @@ import { Loader, ArrowLeft, Package, Star } from "lucide-react";
 import type { Product } from "../data/products";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { whatsappHref } from "../utils/constants";
+import { slugify, whatsappHref } from "../utils/constants";
 
 export default function ProductDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -13,6 +13,7 @@ export default function ProductDetailsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const fetchProduct = async () => {
       try {
         const res = await fetch(
@@ -21,7 +22,6 @@ export default function ProductDetailsPage() {
         const data = await res.json();
         setProduct(data);
 
-        // fetch related products in same category
         if (data?.category) {
           const relatedRes = await fetch(
             `${
@@ -29,7 +29,6 @@ export default function ProductDetailsPage() {
             }/api/categories/${encodeURIComponent(data.category)}/products`
           );
           const relatedData = await relatedRes.json();
-          // Exclude current product
           setRelated(relatedData.products.filter((p: Product) => p._id !== id));
         }
       } catch (err) {
@@ -80,10 +79,8 @@ export default function ProductDetailsPage() {
           Back to Products
         </Link>
 
-        {/* Product Details Card */}
         <Card className="overflow-hidden border-border shadow-xl mb-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-            {/* Image Section */}
             <div className="bg-gradient-to-br from-muted/50 to-muted p-8 lg:p-12 flex items-center justify-center">
               <div className="relative w-full max-w-md aspect-square">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl blur-3xl"></div>
@@ -95,7 +92,6 @@ export default function ProductDetailsPage() {
               </div>
             </div>
 
-            {/* Details Section */}
             <div className="p-8 lg:p-12 flex flex-col justify-between">
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-semibold mb-4">
@@ -123,7 +119,6 @@ export default function ProductDetailsPage() {
                   </span>
                 </div>
 
-                {/* Rating */}
                 <div className="flex items-center gap-2 mb-6">
                   <div className="flex gap-1">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -142,7 +137,6 @@ export default function ProductDetailsPage() {
                   </span>
                 </div>
 
-                {/* Description placeholder */}
                 <div className="space-y-3 mb-8">
                   <div className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2"></div>
@@ -165,7 +159,6 @@ export default function ProductDetailsPage() {
                 </div>
               </div>
 
-              {/* Action Buttons */}
               <div className="flex gap-3">
                 <a
                   href={whatsappHref(product.name)}
@@ -190,7 +183,6 @@ export default function ProductDetailsPage() {
           </div>
         </Card>
 
-        {/* Related Products */}
         {related.length > 0 && (
           <div>
             <div className="flex items-center justify-between mb-6">
@@ -207,7 +199,11 @@ export default function ProductDetailsPage() {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               {related.map((p) => (
-                <Link key={p._id} to={`/product/${p._id}`} className="group">
+                <Link
+                  key={p._id}
+                  to={`/product/${slugify(p.name)}/${p._id}`}
+                  className="group"
+                >
                   <Card className="overflow-hidden border-border hover:border-primary/50 hover:shadow-xl transition-all duration-300">
                     <CardContent className="p-0">
                       <div className="relative w-full aspect-square overflow-hidden rounded-xl group">

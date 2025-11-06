@@ -10,6 +10,7 @@ import ProtectedRoute from "./components/protected-route";
 import AdminDashboard from "./components/admin/admin-dashboard";
 import CustomerLoginPage from "./components/customer/customer-login";
 import ProductDetailsPage from "./components/product-details";
+import CategoryDetailsPage from "./components/category-details-products";
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
       <Route path="/reviews" element={<ReviewsPage />} />
       <Route path="/login" element={<CustomerLoginPage />} />
       <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/product/:id" element={<ProductDetailsPage />} />
+      <Route path="/product/:name/:id" element={<ProductDetailsPage />} />
+      <Route path="/category/:category" element={<CategoryDetailsPage />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Route>
