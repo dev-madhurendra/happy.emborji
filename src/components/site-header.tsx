@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { whatsappHrefGreetings, whatsappNo } from "../utils/constants";
 
 export function SiteHeader() {
   return (
@@ -32,7 +33,7 @@ function ContactBar() {
 
         <nav className="flex items-center gap-2" aria-label="Social links">
           <SocialIcon
-            href="https://instagram.com/"
+            href="https://instagram.com/@happy.embroji"
             label="Instagram"
             gradient="from-pink-500 to-purple-500"
           >
@@ -42,17 +43,17 @@ function ContactBar() {
           </SocialIcon>
 
           <SocialIcon
-            href="https://twitter.com/"
-            label="Twitter"
-            gradient="from-blue-400 to-blue-600"
+            href="https://www.youtube.com/@happy.embroji"
+            label="YouTube"
+            gradient="from-red-500 to-red-700"
           >
             <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              <path d="M23.498 6.186a2.974 2.974 0 0 0-2.095-2.105C19.592 3.75 12 3.75 12 3.75s-7.592 0-9.403.331A2.974 2.974 0 0 0 .502 6.186 31.48 31.48 0 0 0 .168 12a31.48 31.48 0 0 0 .334 5.814 2.974 2.974 0 0 0 2.095 2.105C4.408 20.25 12 20.25 12 20.25s7.592 0 9.403-.331a2.974 2.974 0 0 0 2.095-2.105A31.48 31.48 0 0 0 23.832 12a31.48 31.48 0 0 0-.334-5.814zM9.75 15.02V8.98l6.25 3.02-6.25 3.02z" />
             </svg>
           </SocialIcon>
 
           <SocialIcon
-            href="https://facebook.com/"
+            href="https://facebook.com/@happy.embroji"
             label="Facebook"
             gradient="from-blue-500 to-blue-700"
           >
@@ -62,7 +63,7 @@ function ContactBar() {
           </SocialIcon>
 
           <SocialIcon
-            href="https://wa.me/"
+            href={whatsappHrefGreetings()}
             label="WhatsApp"
             gradient="from-green-500 to-green-600"
           >
@@ -92,7 +93,7 @@ function SocialIcon({
   label,
   children,
   gradient,
-  isBlank=true,
+  isBlank = true,
 }: {
   href: string;
   label: string;
@@ -129,7 +130,6 @@ function NavBar() {
   return (
     <>
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-        {/* Logo */}
         <Link to="/" className="group flex items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-purple-500 shadow-lg shadow-pink-500/30 transition-all group-hover:scale-105 group-hover:shadow-pink-500/50">
             <Sparkles className="h-5 w-5 text-white" />
@@ -139,7 +139,6 @@ function NavBar() {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
           <NavLink href="/products">All Products</NavLink>
           <NavLink href="/crochet">Crochet</NavLink>
@@ -148,7 +147,6 @@ function NavBar() {
           <NavLink href="/reviews">Reviews</NavLink>
         </nav>
 
-        {/* Right Actions */}
         <div className="flex items-center gap-2">
           <Button
             asChild

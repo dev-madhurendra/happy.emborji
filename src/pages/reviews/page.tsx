@@ -1,4 +1,3 @@
-import { ReviewsMarquee } from "../../components/reviews-marquee";
 import {
   Star,
   Heart,
@@ -7,6 +6,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import ReviewsMarquee from "../../components/reviews-marquee";
 
 export default function ReviewsPage() {
   return (

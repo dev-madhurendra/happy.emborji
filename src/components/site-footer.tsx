@@ -1,6 +1,7 @@
 import type React from "react"
 import { Link } from "react-router-dom";
 import { Heart, Mail, MapPin, Phone, Sparkles, Instagram, Facebook, MessageCircle } from "lucide-react";
+import { whatsappNo } from "../utils/constants";
 
 export function SiteFooter() {
   return (
@@ -46,7 +47,7 @@ export function SiteFooter() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 transition-colors group-hover:bg-purple-200">
                   <Phone className="h-4 w-4 text-purple-600" />
                 </div>
-                <span>+91 99999 99999</span>
+                <span>{whatsappNo}</span>
               </a>
 
               <div className="group flex items-center gap-3 text-sm text-muted-foreground">

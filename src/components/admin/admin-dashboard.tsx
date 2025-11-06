@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import ProductTable from "../products-table";
 import { Button } from "../ui/button";
+import ReviewTable from "../review-table";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -195,7 +196,7 @@ export default function AdminDashboard() {
         {/* Reviews Tab */}
         {activeTab === "reviews" && (
           <div className="text-center py-20 text-gray-500">
-            <p>⭐ Product review management will be added soon.</p>
+            <ReviewTable />
           </div>
         )}
       </main>

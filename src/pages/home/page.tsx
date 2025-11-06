@@ -1,9 +1,9 @@
 import { CategoryCarousel } from "../../components/item-carousel";
 import { Hero } from "../../components/hero";
 import { ProductGrid } from "../../components/product-grid";
-import { ReviewsMarquee } from "../../components/reviews-marquee";
 import { SiteFooter } from "../../components/site-footer";
 import { SiteHeader } from "../../components/site-header";
+import ReviewsMarquee from "../../components/reviews-marquee";
 
 export default function HomePage() {
   return (
