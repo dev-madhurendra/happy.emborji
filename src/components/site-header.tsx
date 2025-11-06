@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { whatsappHrefGreetings, whatsappNo } from "../utils/constants";
+import { whatsappHrefGreetings } from "../utils/constants";
 
 export function SiteHeader() {
   return (
