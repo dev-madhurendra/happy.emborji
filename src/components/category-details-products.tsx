@@ -3,7 +3,6 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { Loader, ArrowLeft, Package, Star } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { slugify } from "../utils/constants";
-import { Button } from "./ui/button";
 
 interface Product {
   _id: string;
