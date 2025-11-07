@@ -23,7 +23,7 @@ export default function ReviewsMarquee() {
       try {
         setLoading(true);
         const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/api/reviews?limit=100`
+          `${import.meta.env.VITE_API_FALLBACK_URL}/api/reviews?limit=100`
         );
 
         if (!res.ok) throw new Error("Failed to fetch reviews");
