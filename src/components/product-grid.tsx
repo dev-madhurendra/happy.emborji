@@ -133,32 +133,34 @@ export function ProductGrid({
             <TabsList className="grid h-auto w-full grid-cols-3 gap-2 bg-transparent p-0 sm:w-auto">
               <TabsTrigger
                 value="all"
-                className="group relative h-12 rounded-xl border-2 bg-background data-[state=active]:border-pink-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-50 data-[state=active]:to-purple-50 data-[state=active]:shadow-lg"
+                className="group relative h-12 rounded-xl border-2 bg-background data-[state=active]:border-[#7A8B74] data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#D8E0C8] data-[state=active]:to-[#B3C1A3] data-[state=active]:shadow-lg"
               >
                 <Package className="mr-2 h-4 w-4" />
                 <span className="font-semibold">All</span>
                 {tab === "all" && (
-                  <div className="absolute -bottom-1 left-1/2 h-1 w-12 -translate-x-1/2 rounded-full bg-gradient-to-r from-pink-500 to-purple-500"></div>
+                  <div className="absolute -bottom-1 left-1/2 h-1 w-12 -translate-x-1/2 rounded-full bg-[#7A8B74]"></div>
                 )}
               </TabsTrigger>
+
               <TabsTrigger
                 value="crochet"
-                className="group relative h-12 rounded-xl border-2 bg-background data-[state=active]:border-pink-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-50 data-[state=active]:to-purple-50 data-[state=active]:shadow-lg"
+                className="group relative h-12 rounded-xl border-2 bg-background data-[state=active]:border-[#7A8B74] data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#D8E0C8] data-[state=active]:to-[#B3C1A3] data-[state=active]:shadow-lg"
               >
                 <Sparkles className="mr-2 h-4 w-4" />
                 <span className="font-semibold">Crochet</span>
                 {tab === "crochet" && (
-                  <div className="absolute -bottom-1 left-1/2 h-1 w-12 -translate-x-1/2 rounded-full bg-gradient-to-r from-pink-500 to-purple-500"></div>
+                  <div className="absolute -bottom-1 left-1/2 h-1 w-12 -translate-x-1/2 rounded-full bg-[#7A8B74]"></div>
                 )}
               </TabsTrigger>
+
               <TabsTrigger
                 value="embroidery"
-                className="group relative h-12 rounded-xl border-2 bg-background data-[state=active]:border-pink-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-50 data-[state=active]:to-purple-50 data-[state=active]:shadow-lg"
+                className="group relative h-12 rounded-xl border-2 bg-background data-[state=active]:border-[#7A8B74] data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#D8E0C8] data-[state=active]:to-[#B3C1A3] data-[state=active]:shadow-lg"
               >
                 <TrendingUp className="mr-2 h-4 w-4" />
                 <span className="font-semibold">Embroidery</span>
                 {tab === "embroidery" && (
-                  <div className="absolute -bottom-1 left-1/2 h-1 w-12 -translate-x-1/2 rounded-full bg-gradient-to-r from-pink-500 to-purple-500"></div>
+                  <div className="absolute -bottom-1 left-1/2 h-1 w-12 -translate-x-1/2 rounded-full bg-[#7A8B74]"></div>
                 )}
               </TabsTrigger>
             </TabsList>
@@ -207,13 +209,11 @@ export function ProductGrid({
 
                 return (
                   <Button
-                    key={pageNum}
                     variant={page === pageNum ? "default" : "outline"}
                     size="icon"
-                    onClick={() => setPage(pageNum)}
                     className={`h-8 w-8 text-sm ${
                       page === pageNum
-                        ? "bg-pink-600 text-white hover:bg-pink-700"
+                        ? "bg-[#7A8B74] text-white hover:bg-[#556B2F]"
                         : ""
                     }`}
                   >
@@ -256,13 +256,12 @@ export function ProductGrid({
           </span>
         </div>
       )}
-
       {showViewAll && (
         <div className="mt-12 text-center">
           <Button
             asChild
             size="lg"
-            className="group h-14 bg-gradient-to-r from-pink-600 to-purple-600 px-8 text-base font-semibold text-white shadow-lg shadow-pink-500/30 transition-all hover:scale-105 hover:shadow-xl hover:shadow-pink-500/40"
+            className="group h-14 bg-gradient-to-r from-[#D8E0C8] to-[#7A8B74] px-8 text-base font-semibold text-white shadow-lg shadow-[#7A8B74]/30 transition-all hover:scale-105 hover:shadow-xl hover:shadow-[#556B2F]/40"
           >
             <Link to="/products" className="flex items-center gap-2">
               Explore All Products
@@ -344,23 +343,6 @@ function Grid({
             <ProductCard product={p} />
           </div>
         ))}
-      </div>
-
-      <div className="mt-12 overflow-hidden rounded-3xl bg-gradient-to-r from-pink-100 via-purple-100 to-amber-100 p-8">
-        <div className="grid gap-6 text-center md:grid-cols-3">
-          <div>
-            <p className="text-3xl font-bold text-pink-600">100%</p>
-            <p className="text-sm text-muted-foreground">Handcrafted</p>
-          </div>
-          <div>
-            <p className="text-3xl font-bold text-purple-600">500+</p>
-            <p className="text-sm text-muted-foreground">Happy Customers</p>
-          </div>
-          <div>
-            <p className="text-3xl font-bold text-amber-600">5.0★</p>
-            <p className="text-sm text-muted-foreground">Perfect Rating</p>
-          </div>
-        </div>
       </div>
 
       <style>{`

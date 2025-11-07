@@ -9,7 +9,6 @@ import {
 } from "./ui/carousel";
 import { staticCategories } from "../data/categories";
 import { ArrowRight } from "lucide-react";
-import { slugify } from "../utils/constants";
 
 type Category = {
   category: string;
@@ -42,9 +41,9 @@ export function CategoryCarousel() {
     return (
       <section className="mx-auto max-w-7xl px-4 py-12 flex justify-center">
         <div className="flex gap-2">
-          <div className="h-2.5 w-2.5 rounded-full bg-pink-500 animate-bounce" />
-          <div className="h-2.5 w-2.5 rounded-full bg-purple-500 animate-bounce delay-150" />
-          <div className="h-2.5 w-2.5 rounded-full bg-amber-500 animate-bounce delay-300" />
+          <div className="h-2.5 w-2.5 rounded-full bg-[#7A8B74] animate-bounce" />
+          <div className="h-2.5 w-2.5 rounded-full bg-[#B3C1A3] animate-bounce delay-150" />
+          <div className="h-2.5 w-2.5 rounded-full bg-[#D8E0C8] animate-bounce delay-300" />
         </div>
       </section>
     );
@@ -54,11 +53,11 @@ export function CategoryCarousel() {
     <section className="mx-auto max-w-7xl px-4 py-10">
       <div className="mb-8 flex items-center justify-between">
         <h2 className="font-serif text-2xl font-bold text-gray-900">
-          Browse by <span className="text-pink-600">Category</span>
+          Browse by <span className="text-[#7A8B74]">Category</span>
         </h2>
         <Link
           to="/products"
-          className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-pink-600 transition-colors"
+          className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-[#7A8B74] transition-colors"
         >
           View All
           <ArrowRight className="h-4 w-4" />
@@ -73,10 +72,10 @@ export function CategoryCarousel() {
               className="basis-1/2 pl-3 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
             >
               <Link
-                to={`/category/${slugify(cat.category)}`}
+                to={`/category/${cat.category}`}
                 className="group flex flex-col items-center text-center"
               >
-                <div className="relative h-28 w-28 md:h-32 md:w-32 rounded-full overflow-hidden border border-gray-200 shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1">
+                <div className="relative h-28 w-28 md:h-32 md:w-32 rounded-full overflow-hidden border border-[#B3C1A3] shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1">
                   <img
                     src={cat.image}
                     alt={cat.category}
@@ -84,7 +83,7 @@ export function CategoryCarousel() {
                   />
                 </div>
 
-                <h3 className="mt-3 text-sm font-semibold text-gray-800 group-hover:text-pink-600 transition-colors">
+                <h3 className="mt-3 text-sm font-semibold text-gray-800 group-hover:text-[#7A8B74] transition-colors">
                   {cat.category}
                 </h3>
 
@@ -96,8 +95,8 @@ export function CategoryCarousel() {
           ))}
         </CarouselContent>
 
-        <CarouselPrevious className="hidden sm:flex h-8 w-8 border border-gray-200 hover:border-pink-300 hover:bg-pink-50" />
-        <CarouselNext className="hidden sm:flex h-8 w-8 border border-gray-200 hover:border-pink-300 hover:bg-pink-50" />
+        <CarouselPrevious className="hidden sm:flex h-8 w-8 border border-[#B3C1A3] hover:border-[#7A8B74] hover:bg-[#D8E0C8]" />
+        <CarouselNext className="hidden sm:flex h-8 w-8 border border-[#B3C1A3] hover:border-[#7A8B74] hover:bg-[#D8E0C8]" />
       </Carousel>
     </section>
   );

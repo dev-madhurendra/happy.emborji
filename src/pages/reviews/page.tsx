@@ -1,27 +1,21 @@
-import {
-  Star,
-  Heart,
-  MessageCircle,
-  ArrowLeft,
-  Sparkles,
-} from "lucide-react";
+import { Star, Heart, MessageCircle, ArrowLeft, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import ReviewsMarquee from "../../components/reviews-marquee";
 
 export default function ReviewsPage() {
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden bg-[#FAF8F5]">
       {/* Decorative Background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-pink-100/40 blur-3xl"></div>
-        <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-purple-100/30 blur-3xl"></div>
+        <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-[#D87C5D]/10 blur-3xl"></div>
+        <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-[#7A8B74]/15 blur-3xl"></div>
       </div>
 
       {/* Back Button */}
       <div className="mx-auto max-w-7xl px-4 pt-8">
         <Link
           to="/"
-          className="group inline-flex items-center gap-2 rounded-full border-2 bg-background/80 px-6 py-3 font-medium backdrop-blur-sm transition-all hover:bg-accent hover:shadow-lg"
+          className="group inline-flex items-center gap-2 rounded-full border-2 border-[#D8CAB8] bg-[#FAF8F5]/80 px-6 py-3 font-medium backdrop-blur-sm transition-all hover:bg-[#D87C5D]/10 hover:shadow-lg"
         >
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back to Home
@@ -30,15 +24,15 @@ export default function ReviewsPage() {
 
       {/* Hero Section */}
       <section className="mx-auto max-w-7xl px-4 py-16 text-center">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border bg-background/80 px-4 py-2 text-sm backdrop-blur-sm">
-          <Heart className="h-4 w-4 text-pink-500" fill="currentColor" />
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#D8CAB8] bg-[#FAF8F5]/80 px-4 py-2 text-sm backdrop-blur-sm">
+          <Heart className="h-4 w-4 text-[#D87C5D]" fill="currentColor" />
           <span className="font-medium">Loved by Our Customers</span>
         </div>
 
         <h1 className="mb-4 font-serif text-4xl font-bold tracking-tight md:text-6xl">
           Customer{" "}
           <span className="relative inline-block">
-            <span className="relative z-10 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="relative z-10 bg-gradient-to-r from-[#D87C5D] to-[#7A8B74] bg-clip-text text-transparent">
               Reviews
             </span>
             <svg
@@ -49,64 +43,52 @@ export default function ReviewsPage() {
             >
               <path
                 d="M2 10C60 4 140 4 198 10"
-                stroke="url(#gradient4)"
+                stroke="url(#gradient-reviews)"
                 strokeWidth="3"
                 strokeLinecap="round"
               />
               <defs>
-                <linearGradient
-                  id="gradient4"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="0%"
-                >
-                  <stop offset="0%" stopColor="#db2777" />
-                  <stop offset="100%" stopColor="#9333ea" />
+                <linearGradient id="gradient-reviews" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#D87C5D" />
+                  <stop offset="100%" stopColor="#7A8B74" />
                 </linearGradient>
               </defs>
             </svg>
           </span>
         </h1>
 
-        <p className="mx-auto max-w-2xl text-lg text-muted-foreground md:text-xl">
+        <p className="mx-auto max-w-2xl text-lg text-[#556B2F] md:text-xl">
           Real feedback from real customers. See what people are saying about
           our handcrafted creations on WhatsApp and Instagram.
         </p>
 
         {/* Stats */}
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border-2 bg-background p-6">
-            <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500">
-              <Star className="h-6 w-6 text-white" fill="currentColor" />
+          {[
+            { icon: Star, value: "5.0", label: "Average Rating", from: "#F2A97F", to: "#D87C5D" },
+            { icon: Heart, value: "500+", label: "Happy Customers", from: "#7A8B74", to: "#5D7059" },
+            { icon: MessageCircle, value: "1000+", label: "Reviews", from: "#F2A97F", to: "#7A8B74" },
+          ].map(({ icon: Icon, value, label, from, to }, idx) => (
+            <div
+              key={idx}
+              className="rounded-2xl border-2 border-[#D8CAB8] bg-[#FAF8F5] p-6 text-center transition-all hover:-translate-y-1 hover:shadow-lg"
+            >
+              <div className={`mb-2 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[${from}] to-[${to}]`}>
+                <Icon className="h-6 w-6 text-white" fill="currentColor" />
+              </div>
+              <p className="text-3xl font-bold text-[#3C3C3C]">{value}</p>
+              <p className="text-sm text-[#556B2F]">{label}</p>
             </div>
-            <p className="text-3xl font-bold">5.0</p>
-            <p className="text-sm text-muted-foreground">Average Rating</p>
-          </div>
-
-          <div className="rounded-2xl border-2 bg-background p-6">
-            <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-rose-500">
-              <Heart className="h-6 w-6 text-white" fill="currentColor" />
-            </div>
-            <p className="text-3xl font-bold">500+</p>
-            <p className="text-sm text-muted-foreground">Happy Customers</p>
-          </div>
-
-          <div className="rounded-2xl border-2 bg-background p-6">
-            <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500">
-              <MessageCircle className="h-6 w-6 text-white" />
-            </div>
-            <p className="text-3xl font-bold">1000+</p>
-            <p className="text-sm text-muted-foreground">Reviews</p>
-          </div>
+          ))}
         </div>
       </section>
 
+      {/* Reviews Marquee */}
       <ReviewsMarquee />
 
       {/* CTA Section */}
       <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-pink-600 via-purple-600 to-pink-700 p-12 text-center shadow-2xl md:p-16">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#D87C5D] via-[#7A8B74] to-[#F2A97F] p-12 text-center shadow-2xl md:p-16">
           <div className="absolute left-10 top-10 h-32 w-32 animate-pulse rounded-full bg-white/10 blur-3xl"></div>
           <div
             className="absolute bottom-10 right-10 h-40 w-40 animate-pulse rounded-full bg-white/10 blur-3xl"
@@ -124,7 +106,7 @@ export default function ReviewsPage() {
             </p>
             <Link
               to="/products"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-semibold text-purple-600 shadow-xl transition-all hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-semibold text-[#D87C5D] shadow-xl transition-all hover:scale-105"
             >
               Shop Now
               <ArrowLeft className="h-5 w-5 rotate-180" />

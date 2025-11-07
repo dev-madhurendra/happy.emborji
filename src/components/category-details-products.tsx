@@ -64,7 +64,7 @@ export default function CategoryDetailsPage() {
     );
 
   function handleNavigate(): void {
-    navigate(-1)
+    navigate(-1);
   }
 
   return (

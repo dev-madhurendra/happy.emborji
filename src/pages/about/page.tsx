@@ -23,21 +23,21 @@ export default function AboutPage() {
       title: "Made with Love",
       description:
         "Every stitch carries intention and care, transforming threads into memories that last.",
-      gradient: "from-pink-500 to-rose-500",
+      gradient: "from-[#D87C5D] to-[#F2A97F]",
     },
     {
       icon: Sparkles,
       title: "Uniquely Yours",
       description:
         "Custom designs tailored to your story, ensuring each piece is as unique as you are.",
-      gradient: "from-purple-500 to-pink-500",
+      gradient: "from-[#7A8B74] to-[#D87C5D]",
     },
     {
       icon: Scissors,
       title: "Crafted by Hand",
       description:
         "Traditional techniques meet modern aesthetics in every carefully handcrafted creation.",
-      gradient: "from-amber-500 to-orange-500",
+      gradient: "from-[#F2A97F] to-[#7A8B74]",
     },
   ];
 
@@ -46,36 +46,36 @@ export default function AboutPage() {
       src: "/studio-crochet-bouquet.jpg",
       title: "Handcrafted Bouquets",
       subtitle: "Each petal carefully shaped with love",
-      color: "from-pink-500/80 to-rose-500/80",
+      gradient: "from-[#D87C5D]/70 to-[#F2A97F]/70",
     },
     {
       src: "/embroidery-hoop-art.jpg",
       title: "Embroidery Art",
       subtitle: "Detailed needlework & precision",
-      color: "from-purple-500/80 to-pink-500/80",
+      gradient: "from-[#7A8B74]/70 to-[#D87C5D]/70",
     },
     {
       src: "/packaging-and-details.jpg",
       title: "Gift Ready",
       subtitle: "Beautiful packaging included",
-      color: "from-amber-500/80 to-orange-500/80",
+      gradient: "from-[#F2A97F]/70 to-[#7A8B74]/70",
     },
   ];
 
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden bg-[#FAF8F5]">
       {/* Decorative Background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-pink-100/40 blur-3xl"></div>
-        <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-purple-100/30 blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-amber-100/20 blur-3xl"></div>
+        <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-[#D87C5D]/10 blur-3xl"></div>
+        <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-[#7A8B74]/15 blur-3xl"></div>
+        <div className="absolute bottom-0 left-1/3 h-96 w-96 rounded-full bg-[#F2A97F]/15 blur-3xl"></div>
       </div>
 
       {/* Back Button */}
       <div className="mx-auto max-w-7xl px-4 pt-8">
         <Link
           to="/"
-          className="group inline-flex items-center gap-2 rounded-full border-2 bg-background/80 px-6 py-3 font-medium backdrop-blur-sm transition-all hover:bg-accent hover:shadow-lg"
+          className="group inline-flex items-center gap-2 rounded-full border-2 border-[#D8CAB8] bg-[#FAF8F5]/80 px-6 py-3 font-medium backdrop-blur-sm transition-all hover:bg-[#D87C5D]/10 hover:shadow-lg"
         >
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back to Home
@@ -83,98 +83,84 @@ export default function AboutPage() {
       </div>
 
       {/* Hero Section */}
-      <section className="mx-auto max-w-7xl px-4 py-16 md:py-24">
-        <div className="text-center">
-          {/* Badge */}
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border bg-background/80 px-4 py-2 text-sm backdrop-blur-sm">
-            <Heart className="h-4 w-4 text-pink-500" fill="currentColor" />
-            <span className="font-medium">Our Story</span>
-          </div>
-
-          {/* Main Heading */}
-          <h1 className="mb-6 font-serif text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
-            About{" "}
-            <span className="relative inline-block">
-              <span className="relative z-10 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-                happy.embroji
-              </span>
-              <svg
-                className="absolute -bottom-2 left-0 w-full"
-                height="12"
-                viewBox="0 0 200 12"
-                fill="none"
-              >
-                <path
-                  d="M2 10C60 4 140 4 198 10"
-                  stroke="url(#gradient2)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
-                <defs>
-                  <linearGradient
-                    id="gradient2"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="0%"
-                  >
-                    <stop offset="0%" stopColor="#db2777" />
-                    <stop offset="100%" stopColor="#9333ea" />
-                  </linearGradient>
-                </defs>
-              </svg>
-            </span>
-          </h1>
-
-          {/* Description */}
-          <p className="mx-auto max-w-3xl text-pretty text-lg leading-relaxed text-muted-foreground md:text-xl">
-            We create crochet and embroidery pieces that feel personal and
-            thoughtful—from bouquets to keychains and hoops. Everything is made
-            by hand in small batches, with love woven into every stitch. Custom
-            requests are always welcome, because your story deserves to be told
-            beautifully.
-          </p>
+      <section className="mx-auto max-w-7xl px-4 py-16 md:py-24 text-center">
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#D8CAB8] bg-[#FAF8F5]/80 px-4 py-2 text-sm backdrop-blur-sm">
+          <Heart className="h-4 w-4 text-[#D87C5D]" fill="currentColor" />
+          <span className="font-medium">Our Story</span>
         </div>
+
+        <h1 className="mb-6 font-serif text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
+          About{" "}
+          <span className="relative inline-block">
+            <span className="relative z-10 bg-gradient-to-r from-[#D87C5D] to-[#7A8B74] bg-clip-text text-transparent">
+              happy.embroji
+            </span>
+            <svg
+              className="absolute -bottom-2 left-0 w-full"
+              height="12"
+              viewBox="0 0 200 12"
+              fill="none"
+            >
+              <path
+                d="M2 10C60 4 140 4 198 10"
+                stroke="url(#gradient-about)"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+              <defs>
+                <linearGradient id="gradient-about" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#D87C5D" />
+                  <stop offset="100%" stopColor="#7A8B74" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+        </h1>
+
+        <p className="mx-auto max-w-3xl text-lg leading-relaxed text-[#556B2F] md:text-xl">
+          We create crochet and embroidery pieces that feel personal and
+          thoughtful—from bouquets to keychains and hoops. Everything is made
+          by hand in small batches, with love woven into every stitch. Custom
+          requests are always welcome, because your story deserves to be told
+          beautifully.
+        </p>
 
         {/* Stats Grid */}
         <div className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-6">
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="group relative overflow-hidden rounded-2xl border-2 bg-background p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              className="group relative overflow-hidden rounded-2xl border-2 bg-[#FAF8F5] p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <div className="absolute right-4 top-4 opacity-10 transition-all duration-300 group-hover:scale-110 group-hover:opacity-20">
                 <stat.icon className="h-16 w-16" />
               </div>
               <div className="relative">
-                <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-purple-500">
+                <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#D87C5D] to-[#7A8B74]">
                   <stat.icon className="h-6 w-6 text-white" />
                 </div>
-                <p className="mb-1 text-3xl font-bold">{stat.value}</p>
-                <p className="text-sm text-muted-foreground">{stat.label}</p>
+                <p className="mb-1 text-3xl font-bold text-[#3C3C3C]">{stat.value}</p>
+                <p className="text-sm text-[#556B2F]">{stat.label}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Enhanced Image Gallery Section */}
+      {/* Gallery Section */}
       <section className="relative mx-auto max-w-7xl px-4 py-16">
-        {/* Background Accent */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-pink-50/30 to-transparent"></div>
-
         <div className="mb-16 text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border bg-background/80 px-4 py-2 text-sm backdrop-blur-sm">
-            <Scissors className="h-4 w-4 text-purple-500" />
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#D8CAB8] bg-[#FAF8F5]/80 px-4 py-2 text-sm backdrop-blur-sm">
+            <Scissors className="h-4 w-4 text-[#7A8B74]" />
             <span className="font-medium">Our Craft</span>
           </div>
           <h2 className="mb-4 font-serif text-3xl font-bold md:text-5xl">
             Behind the{" "}
-            <span className="bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#D87C5D] to-[#7A8B74] bg-clip-text text-transparent">
               Scenes
             </span>
           </h2>
-          <p className="mx-auto max-w-2xl text-pretty text-lg text-muted-foreground">
+          <p className="mx-auto max-w-2xl text-lg text-[#556B2F]">
             A glimpse into our creative process, where imagination meets
             craftsmanship
           </p>
@@ -184,9 +170,8 @@ export default function AboutPage() {
           {galleryImages.map((image, index) => (
             <div
               key={index}
-              className="group relative overflow-hidden rounded-3xl shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-pink-500/20"
+              className="group relative overflow-hidden rounded-3xl shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
             >
-              {/* Image */}
               <div className="aspect-square overflow-hidden">
                 <img
                   src={image.src}
@@ -195,59 +180,28 @@ export default function AboutPage() {
                 />
               </div>
 
-              {/* Gradient Overlay */}
               <div
-                className={`absolute inset-0 bg-gradient-to-t ${image.color} to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-80`}
+                className={`absolute inset-0 bg-gradient-to-t ${image.gradient} to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-80`}
               ></div>
 
-              {/* Content Overlay */}
               <div className="absolute inset-0 flex flex-col justify-end p-6">
                 <div className="translate-y-2 transition-all duration-300 group-hover:translate-y-0">
-                  {/* Icon Badge */}
                   <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-xl">
                     <Sparkles className="h-6 w-6 text-white" />
                   </div>
-
-                  {/* Text */}
                   <h3 className="mb-2 text-2xl font-bold text-white">
                     {image.title}
                   </h3>
                   <p className="text-sm text-white/90 opacity-0 transition-all duration-300 group-hover:opacity-100">
                     {image.subtitle}
                   </p>
-
-                  {/* Decorative Line */}
                   <div className="mt-4 h-1 w-0 rounded-full bg-white/50 transition-all duration-500 group-hover:w-20"></div>
                 </div>
               </div>
 
-              {/* Corner Accent */}
               <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10 blur-2xl transition-all duration-500 group-hover:scale-150"></div>
             </div>
           ))}
-        </div>
-
-        {/* Additional Info Banner */}
-        <div className="mt-12 overflow-hidden rounded-2xl border bg-gradient-to-r from-pink-50 via-purple-50 to-amber-50 p-8 shadow-lg">
-          <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
-            <div className="text-center md:text-left">
-              <h3 className="mb-2 text-2xl font-bold">Want to see more?</h3>
-              <p className="text-muted-foreground">
-                Follow our journey on social media for daily inspiration
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <button className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-rose-500 text-white shadow-lg transition-all hover:scale-110 hover:shadow-xl">
-                <Heart className="h-5 w-5" fill="currentColor" />
-              </button>
-              <button className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg transition-all hover:scale-110 hover:shadow-xl">
-                <Sparkles className="h-5 w-5" />
-              </button>
-              <button className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg transition-all hover:scale-110 hover:shadow-xl">
-                <Package className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -257,7 +211,7 @@ export default function AboutPage() {
           <h2 className="mb-4 font-serif text-3xl font-bold md:text-4xl">
             What Makes Us Different
           </h2>
-          <p className="mx-auto max-w-2xl text-pretty text-muted-foreground">
+          <p className="mx-auto max-w-2xl text-[#556B2F]">
             Our commitment to quality, creativity, and personal connection in
             every piece
           </p>
@@ -267,67 +221,59 @@ export default function AboutPage() {
           {values.map((value, index) => (
             <div
               key={index}
-              className="group relative overflow-hidden rounded-3xl border-2 bg-background p-8 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              className="group relative overflow-hidden rounded-3xl border-2 bg-[#FAF8F5] p-8 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
             >
-              {/* Gradient Background on Hover */}
               <div
                 className={`absolute inset-0 bg-gradient-to-br ${value.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-5`}
               ></div>
 
               <div className="relative">
-                {/* Icon */}
                 <div
                   className={`mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${value.gradient} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
                 >
                   <value.icon className="h-8 w-8 text-white" />
                 </div>
-
-                {/* Content */}
                 <h3 className="mb-3 text-2xl font-bold">{value.title}</h3>
-                <p className="leading-relaxed text-muted-foreground">
-                  {value.description}
-                </p>
+                <p className="leading-relaxed text-[#556B2F]">{value.description}</p>
               </div>
 
-              {/* Decorative Corner */}
-              <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br from-pink-500/10 to-purple-500/10 blur-2xl transition-all duration-300 group-hover:scale-150"></div>
+              <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br from-[#D87C5D]/10 to-[#7A8B74]/10 blur-2xl transition-all duration-300 group-hover:scale-150"></div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Simplified CTA Section */}
+      {/* CTA Section */}
       <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="relative overflow-hidden rounded-3xl border-2 bg-gradient-to-br from-pink-50 to-purple-50 p-12 text-center shadow-2xl md:p-16">
-          {/* Decorative Elements */}
-          <div className="absolute left-10 top-10 h-20 w-20 rounded-full bg-pink-200/50 blur-2xl"></div>
-          <div className="absolute bottom-10 right-10 h-32 w-32 rounded-full bg-purple-200/50 blur-2xl"></div>
+        <div className="relative overflow-hidden rounded-3xl border-2 bg-gradient-to-br from-[#D87C5D]/10 via-[#7A8B74]/10 to-[#F2A97F]/10 p-12 text-center shadow-2xl md:p-16">
+          <div className="absolute left-10 top-10 h-20 w-20 rounded-full bg-[#D87C5D]/20 blur-2xl"></div>
+          <div className="absolute bottom-10 right-10 h-32 w-32 rounded-full bg-[#7A8B74]/20 blur-2xl"></div>
 
           <div className="relative">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border bg-white/80 px-4 py-2 text-sm backdrop-blur-sm">
-              <Sparkles className="h-4 w-4 text-amber-500" />
+              <Sparkles className="h-4 w-4 text-[#F2A97F]" />
               <span className="font-medium">Ready to Create?</span>
             </div>
 
             <h2 className="mb-4 font-serif text-3xl font-bold md:text-5xl">
               Let's Create Something{" "}
-              <span className="bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#D87C5D] to-[#7A8B74] bg-clip-text text-transparent">
                 Special
               </span>
             </h2>
-            <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
+            <p className="mx-auto mb-8 max-w-2xl text-lg text-[#556B2F]">
               Whether you have a custom idea or want to explore our collection,
               we're here to bring your vision to life.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <button className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-pink-500/30 transition-all hover:shadow-xl hover:shadow-pink-500/40">
+              <button className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#D87C5D] to-[#7A8B74] px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-[#D87C5D]/30 transition-all hover:shadow-xl hover:shadow-[#D87C5D]/40">
                 Start Custom Order
                 <span className="transition-transform group-hover:translate-x-1">
                   →
                 </span>
               </button>
-              <button className="inline-flex items-center gap-2 rounded-full border-2 bg-white px-8 py-4 text-lg font-semibold transition-all hover:bg-accent/50">
+              <button className="inline-flex items-center gap-2 rounded-full border-2 bg-white px-8 py-4 text-lg font-semibold transition-all hover:bg-[#F2A97F]/20">
                 <Users className="h-5 w-5" />
                 Contact Us
               </button>

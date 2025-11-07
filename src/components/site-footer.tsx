@@ -1,58 +1,63 @@
-import type React from "react"
-import { Link } from "react-router-dom";
-import { Heart, Mail, MapPin, Phone, Sparkles, Instagram, Facebook, MessageCircle } from "lucide-react";
-import { whatsappNo } from "../utils/constants";
+import type React from "react";
+import {
+  Heart,
+  Mail,
+  MapPin,
+  Phone,
+  Leaf,
+  Instagram,
+  Facebook,
+  MessageCircle,
+} from "lucide-react";
+import { whatsappNo, whatsappHrefGreetings } from "../utils/constants";
 
 export function SiteFooter() {
   return (
-    <footer className="relative mt-20 overflow-hidden border-t bg-gradient-to-br from-pink-50 via-purple-50 to-amber-50">
-      {/* Decorative Background Elements */}
+    <footer className="relative mt-20 overflow-hidden border-t border-[#D8CAB8] bg-[#FAF8F5]">
+      {/* Background Gradient Circles */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-pink-200/30 blur-3xl"></div>
-        <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-purple-200/30 blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[#D87C5D]/10 blur-3xl"></div>
+        <div className="absolute top-0 left-0 h-96 w-96 rounded-full bg-[#7A8B74]/15 blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-1/3 h-80 w-80 rounded-full bg-[#E8D5C4]/20 blur-3xl"></div>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
-        {/* Main Footer Content */}
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <Link to="/" className="group mb-4 inline-flex items-center gap-2">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-purple-500 shadow-lg transition-transform group-hover:scale-105">
-                <Sparkles className="h-6 w-6 text-white" />
+            <a
+              href="/"
+              className="group mb-4 inline-flex items-center gap-2 cursor-pointer"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#7A8B74] to-[#D87C5D] transition-transform duration-300 group-hover:scale-105 group-hover:shadow-md">
+                <Leaf className="h-6 w-6 text-[#FAF8F5]" />
               </div>
-              <span className="font-serif text-2xl font-bold">happy.embroji</span>
-            </Link>
-            
-            <p className="mb-6 max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Handcrafted crochet and embroidery made with love. Each piece tells a story, crafted with premium materials and timeless techniques. Custom orders welcome.
+              <span className="font-serif text-2xl font-bold text-[#3C3C3C]">
+                happy.embroji
+              </span>
+            </a>
+
+            <p className="mb-6 max-w-sm text-sm leading-relaxed text-[#556B2F]">
+              Handcrafted crochet and embroidery made with love and care. Each
+              piece tells a story of craftsmanship, patience, and timeless
+              artistry.
             </p>
 
             {/* Contact Info */}
             <div className="space-y-3">
-              <a 
-                href="mailto:happy.embroji@gmail.com" 
-                className="group flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-pink-100 transition-colors group-hover:bg-pink-200">
-                  <Mail className="h-4 w-4 text-pink-600" />
-                </div>
-                <span>happy.embroji@gmail.com</span>
-              </a>
-
-              <a 
-                href="tel:+919999999999" 
-                className="group flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 transition-colors group-hover:bg-purple-200">
-                  <Phone className="h-4 w-4 text-purple-600" />
-                </div>
-                <span>{whatsappNo}</span>
-              </a>
-
-              <div className="group flex items-center gap-3 text-sm text-muted-foreground">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100">
-                  <MapPin className="h-4 w-4 text-amber-600" />
+              <FooterContact
+                href="mailto:happy.embroji@gmail.com"
+                icon={<Mail className="h-4 w-4" />}
+                text="happy.embroji@gmail.com"
+              />
+              <FooterContact
+                href={`tel:${whatsappNo}`}
+                icon={<Phone className="h-4 w-4" />}
+                text={whatsappNo}
+              />
+              <div className="flex items-center gap-3 text-sm text-[#556B2F]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#E8D5C4]/30">
+                  <MapPin className="h-4 w-4 text-[#D87C5D]" />
                 </div>
                 <span>Khalilabad, Sant Kabir Nagar, Uttar Pradesh, India</span>
               </div>
@@ -60,24 +65,36 @@ export function SiteFooter() {
           </div>
 
           {/* Shop Links */}
-          <FooterCol title="Shop">
+          <FooterCol title="Shop" icon="🧵">
             <FooterLink href="/products">All Products</FooterLink>
-            <FooterLink href="/crochet">Crochet Collection</FooterLink>
-            <FooterLink href="/embroidery">Embroidery Art</FooterLink>
-            <FooterLink href="/products?category=bouquet">Bouquets</FooterLink>
-            <FooterLink href="/products?category=keychain">Keychains</FooterLink>
+            <FooterSubSection>
+              <FooterLink href="/crochet" isSubItem>
+                Crochet Collection
+              </FooterLink>
+              <FooterLink href="/embroidery" isSubItem>
+                Embroidery Art
+              </FooterLink>
+            </FooterSubSection>
+            <FooterSubSection>
+              <FooterLink href="/products?category=bouquet" isSubItem>
+                Bouquets
+              </FooterLink>
+              <FooterLink href="/products?category=keychain" isSubItem>
+                Keychains
+              </FooterLink>
+            </FooterSubSection>
           </FooterCol>
 
           {/* Company Links */}
-          <FooterCol title="Company">
+          <FooterCol title="Company" icon="🏡">
             <FooterLink href="/about">About Us</FooterLink>
             <FooterLink href="/reviews">Customer Reviews</FooterLink>
             <FooterLink href="/contact">Contact</FooterLink>
             <FooterLink href="/faq">FAQ</FooterLink>
           </FooterCol>
 
-          {/* Legal & Social */}
-          <FooterCol title="Connect">
+          {/* Connect & Legal */}
+          <FooterCol title="Connect" icon="🌿">
             <div className="mb-4 space-y-2">
               <FooterLink href="/terms">Terms of Service</FooterLink>
               <FooterLink href="/privacy">Privacy Policy</FooterLink>
@@ -86,56 +103,47 @@ export function SiteFooter() {
 
             {/* Social Links */}
             <div className="space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#556B2F]">
                 Follow Us
               </p>
               <div className="flex gap-2">
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-pink-500 to-purple-500 text-white shadow-md transition-all hover:scale-110 hover:shadow-lg"
-                  aria-label="Instagram"
-                >
-                  <Instagram className="h-5 w-5" />
-                </a>
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-white shadow-md transition-all hover:scale-110 hover:shadow-lg"
-                  aria-label="Facebook"
-                >
-                  <Facebook className="h-5 w-5" />
-                </a>
-                <a
-                  href="https://wa.me/919999999999"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex h-10 w-10 items-center justify-center rounded-lg bg-green-500 text-white shadow-md transition-all hover:scale-110 hover:shadow-lg"
-                  aria-label="WhatsApp"
-                >
-                  <MessageCircle className="h-5 w-5" />
-                </a>
+                <SocialButton
+                  href="https://instagram.com/@happy.embroji"
+                  icon={<Instagram className="h-5 w-5" />}
+                  hover="from-[#F2A97F] to-[#D87C5D]"
+                />
+                <SocialButton
+                  href="https://facebook.com/@happy.embroji"
+                  icon={<Facebook className="h-5 w-5" />}
+                  hover="from-[#7A8B74] to-[#B3A078]"
+                />
+                <SocialButton
+                  href={whatsappHrefGreetings()}
+                  icon={<MessageCircle className="h-5 w-5" />}
+                  hover="from-[#7A8B74] to-[#5D7059]"
+                />
               </div>
             </div>
           </FooterCol>
         </div>
 
         {/* Newsletter Section */}
-        <div className="mt-12 rounded-2xl border-2 bg-gradient-to-r from-pink-100 via-purple-100 to-amber-100 p-8 text-center">
-          <Sparkles className="mx-auto mb-3 h-8 w-8 text-amber-600" />
-          <h3 className="mb-2 text-xl font-bold">Stay Updated!</h3>
-          <p className="mb-4 text-sm text-muted-foreground">
-            Get notified about new collections, special offers, and exclusive discounts.
+        <div className="mt-12 rounded-xl border border-[#D8CAB8] bg-[#FAF8F5]/70 p-8 text-center backdrop-blur-sm shadow-md">
+          <Leaf className="mx-auto mb-3 h-8 w-8 text-[#7A8B74]" />
+          <h3 className="mb-2 text-xl font-bold text-[#3C3C3C]">
+            Stay Connected
+          </h3>
+          <p className="mb-4 text-sm text-[#556B2F]">
+            Join our craft family to receive updates about new collections and
+            exclusive offers.
           </p>
           <div className="mx-auto flex max-w-md gap-2">
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 rounded-lg border-2 bg-white px-4 py-2 text-sm outline-none focus:border-pink-500"
+              className="flex-1 rounded-lg border border-[#D8CAB8] bg-[#FAF8F5] px-4 py-2.5 text-sm text-[#3C3C3C] outline-none transition-colors focus:border-[#7A8B74] focus:ring-2 focus:ring-[#7A8B74]/30"
             />
-            <button className="rounded-lg bg-gradient-to-r from-pink-600 to-purple-600 px-6 py-2 text-sm font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl">
+            <button className="rounded-lg bg-[#7A8B74] px-6 py-2.5 text-sm font-semibold text-[#FAF8F5] transition-all duration-300 hover:bg-[#556B2F] hover:shadow-md">
               Subscribe
             </button>
           </div>
@@ -143,52 +151,133 @@ export function SiteFooter() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t bg-white/50 backdrop-blur-sm">
+      <div className="border-t border-[#D8CAB8] bg-[#FAF8F5]/40">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-6 text-sm md:flex-row">
-          <p className="text-muted-foreground">
+          <p className="text-[#556B2F]">
             © {new Date().getFullYear()} happy.embroji. All rights reserved.
           </p>
-          
-          <div className="flex items-center gap-2 text-muted-foreground">
+
+          <div className="flex items-center gap-2 text-[#556B2F]">
             <span>Made with</span>
-            <Heart className="h-4 w-4 fill-pink-500 text-pink-500 animate-pulse" />
+            <Heart className="h-4 w-4 fill-[#D87C5D] text-[#D87C5D] animate-pulse" />
             <span>in India</span>
           </div>
 
-          {/* Payment Methods */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">We accept:</span>
-            <div className="flex gap-1">
-              <div className="rounded bg-white px-2 py-1 text-xs font-semibold shadow-sm">GPay</div>
-              <div className="rounded bg-white px-2 py-1 text-xs font-semibold shadow-sm">PhonePe</div>
-              <div className="rounded bg-white px-2 py-1 text-xs font-semibold shadow-sm">Card</div>
+            <span className="text-xs text-[#556B2F]">We accept:</span>
+            <div className="flex gap-1.5">
+              {["GPay", "PhonePe", "Card"].map((m) => (
+                <div
+                  key={m}
+                  className="rounded-md border border-[#D8CAB8] bg-[#FAF8F5] px-2.5 py-1 text-xs font-semibold text-[#3C3C3C]"
+                >
+                  {m}
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
 
-function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
+/* Subcomponents */
+function FooterCol({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
-      <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-foreground">{title}</h3>
-      <ul className="space-y-2.5">{children}</ul>
+      <h3 className="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#3C3C3C]">
+        {icon && <span className="text-base">{icon}</span>}
+        {title}
+      </h3>
+      <ul className="space-y-1">{children}</ul>
     </div>
-  )
+  );
 }
 
-function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
+function FooterSubSection({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="ml-3 border-l-2 border-[#D8CAB8] pl-3 space-y-1">
+      {children}
+    </div>
+  );
+}
+
+function FooterLink({
+  href,
+  children,
+  isSubItem = false,
+}: {
+  href: string;
+  children: React.ReactNode;
+  isSubItem?: boolean;
+}) {
   return (
     <li>
-      <Link 
-        to={href} 
-        className="group inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-foreground"
+      <a
+        href={href}
+        className={`group inline-flex items-center text-sm text-[#556B2F] transition-all duration-300 hover:text-[#7A8B74] hover:translate-x-1 cursor-pointer ${
+          isSubItem ? "text-xs" : ""
+        }`}
       >
-        <span className="mr-2 h-1 w-1 rounded-full bg-pink-400 opacity-0 transition-opacity group-hover:opacity-100"></span>
+        <span
+          className={`mr-2 rounded-full bg-[#D87C5D] opacity-0 transition-all duration-300 group-hover:opacity-100 ${
+            isSubItem ? "h-1 w-1" : "h-1.5 w-1.5"
+          }`}
+        ></span>
         {children}
-      </Link>
+      </a>
     </li>
-  )
+  );
+}
+
+function FooterContact({
+  href,
+  icon,
+  text,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  text: string;
+}) {
+  return (
+    <a
+      href={href}
+      className="group flex items-center gap-3 text-sm text-[#556B2F] transition-colors hover:text-[#7A8B74]"
+    >
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#E8D5C4]/30 transition-all duration-300 group-hover:bg-[#E8D5C4]/50 group-hover:scale-105">
+        <div className="text-[#7A8B74]">{icon}</div>
+      </div>
+      <span>{text}</span>
+    </a>
+  );
+}
+
+function SocialButton({
+  href,
+  icon,
+  hover,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  hover: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className={`flex h-10 w-10 items-center justify-center rounded-lg bg-[#FAF8F5] text-[#7A8B74] transition-all duration-300 hover:bg-gradient-to-br ${hover} hover:text-white hover:scale-110 shadow-sm cursor-pointer`}
+    >
+      {icon}
+    </a>
+  );
 }
