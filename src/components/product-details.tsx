@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Loader, ArrowLeft, Package, Star } from "lucide-react";
 import type { Product } from "../data/products";
 import { Button } from "./ui/button";
@@ -11,6 +11,7 @@ export default function ProductDetailsPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [related, setRelated] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -58,7 +59,7 @@ export default function ProductDetailsPage() {
         <p className="text-muted-foreground mb-6">
           The product you're looking for doesn't exist
         </p>
-        <Link to="/">
+        <Link to="" onClick={() => navigate(-1)}>
           <Button className="gap-2">
             <ArrowLeft className="w-4 h-4" />
             Back to Products
@@ -72,6 +73,7 @@ export default function ProductDetailsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <Link
+          onClick={() => navigate(-1)}
           to="/"
           className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-8 group"
         >

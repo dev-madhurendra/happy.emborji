@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Loader, ArrowLeft, Package, Star } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { slugify } from "../utils/constants";
+import { Button } from "./ui/button";
 
 interface Product {
   _id: string;
@@ -17,6 +18,7 @@ export default function CategoryDetailsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [categoryInfo, setCategoryInfo] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategoryProducts = async () => {
@@ -62,12 +64,17 @@ export default function CategoryDetailsPage() {
       </div>
     );
 
+  function handleNavigate(): void {
+    navigate(-1)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <Link
           to="/"
+          onClick={handleNavigate}
           className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground mb-6 group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
