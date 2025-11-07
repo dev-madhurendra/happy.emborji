@@ -274,21 +274,18 @@ export default function ProductTable() {
   };
 
   useEffect(() => {
-    fetchProducts();
-    console.log("Rendering")
-  }, [page]);
-
-  useEffect(() => {
-    if (
+    const noFilters =
       !filters.search &&
       !filters.category &&
       !filters.tag &&
       !filters.minPrice &&
-      !filters.maxPrice
-    ) {
+      !filters.maxPrice;
+
+    if (noFilters || page) {
       fetchProducts();
+      console.log("Rendering");
     }
-  }, [filters]);
+  }, [page, filters]);
 
   if (loading)
     return (

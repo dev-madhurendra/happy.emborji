@@ -63,7 +63,7 @@ export default function AdminDashboard() {
       >
         <div>
           <div className="flex items-center justify-between mb-8 md:mb-10">
-            <h2 className="text-2xl font-bold">Happy Ebroji</h2>
+            <h2 className="text-2xl font-bold">Happy Embroji</h2>
             <button
               className="md:hidden p-1"
               onClick={() => setSidebarOpen(false)}

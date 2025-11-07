@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Loader, ArrowLeft, Package, Star } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
+import { slugify } from "../utils/constants";
 
 interface Product {
   _id: string;
@@ -23,7 +24,9 @@ export default function CategoryDetailsPage() {
         setLoading(true);
         const encoded = encodeURIComponent(category || "");
         const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/api/categories/${encoded}/products`
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/categories/${encoded}/products`
         );
         const data = await res.json();
         setProducts(data.products || []);
@@ -34,7 +37,9 @@ export default function CategoryDetailsPage() {
         );
         const cats = await catRes.json();
         const found = cats.find(
-          (c: any) => c.category.trim().toLowerCase() === (category || "").trim().toLowerCase()
+          (c: any) =>
+            c.category.trim().toLowerCase() ===
+            (category || "").trim().toLowerCase()
         );
         setCategoryInfo(found);
       } catch (err) {
@@ -71,12 +76,19 @@ export default function CategoryDetailsPage() {
 
         {/* Category Header */}
         <div className="flex flex-col md:flex-row items-center gap-6 mb-10">
-          
+          <div className="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border border-gray-200 shadow-sm">
+            <img
+              src={categoryInfo?.image || "/placeholder.jpg"}
+              alt={category}
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div>
             <h1 className="text-4xl font-bold mb-2">{category}</h1>
             {categoryInfo && (
               <p className="text-muted-foreground">
-                {categoryInfo.count} {categoryInfo.count > 1 ? "products" : "product"}
+                {categoryInfo.count}{" "}
+                {categoryInfo.count > 1 ? "products" : "product"}
               </p>
             )}
           </div>
@@ -88,7 +100,7 @@ export default function CategoryDetailsPage() {
             {products.map((p) => (
               <Link
                 key={p._id}
-                to={`/product/${p.name}/${p._id}`}
+                to={`/product/${slugify(p.name)}/${p._id}`}
                 className="group"
               >
                 <Card className="overflow-hidden border hover:border-primary/50 hover:shadow-lg transition-all duration-300">
@@ -126,7 +138,9 @@ export default function CategoryDetailsPage() {
         ) : (
           <div className="text-center py-20 text-muted-foreground">
             <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
-            <p className="text-lg font-medium">No products found in this category</p>
+            <p className="text-lg font-medium">
+              No products found in this category
+            </p>
           </div>
         )}
       </div>

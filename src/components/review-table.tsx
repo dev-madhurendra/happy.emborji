@@ -74,7 +74,6 @@ export default function ReviewTable() {
         limit: "6",
       });
 
-      // Add filter params if they exist
       if (filters.type) params.append("type", filters.type);
       if (filters.platform) params.append("platform", filters.platform);
       if (filters.minRating) params.append("minRating", filters.minRating);
@@ -298,19 +297,17 @@ export default function ReviewTable() {
   };
 
   useEffect(() => {
-    fetchReviews();
-  }, [page]);
-
-  useEffect(() => {
-    if (
+    const noFilters =
       !filters.type &&
       !filters.platform &&
       !filters.minRating &&
-      !filters.maxRating
-    ) {
+      !filters.maxRating;
+
+    if (noFilters || page) {
       fetchReviews();
     }
-  }, [filters]);
+  }, [page, filters]);
+
 
   if (loading)
     return (

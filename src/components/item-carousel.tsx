@@ -9,6 +9,7 @@ import {
 } from "./ui/carousel";
 import { staticCategories } from "../data/categories";
 import { ArrowRight } from "lucide-react";
+import { slugify } from "../utils/constants";
 
 type Category = {
   category: string;
@@ -23,7 +24,9 @@ export function CategoryCarousel() {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/categories`);
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/categories`
+        );
         const data = await res.json();
         setCategories(data || staticCategories);
       } catch {
@@ -70,7 +73,7 @@ export function CategoryCarousel() {
               className="basis-1/2 pl-3 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
             >
               <Link
-                to={`/category/${cat.category}`}
+                to={`/category/${slugify(cat.category)}`}
                 className="group flex flex-col items-center text-center"
               >
                 <div className="relative h-28 w-28 md:h-32 md:w-32 rounded-full overflow-hidden border border-gray-200 shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1">
@@ -93,8 +96,8 @@ export function CategoryCarousel() {
           ))}
         </CarouselContent>
 
-        <CarouselPrevious className="h-8 w-8 border border-gray-200 hover:border-pink-300 hover:bg-pink-50" />
-        <CarouselNext className="h-8 w-8 border border-gray-200 hover:border-pink-300 hover:bg-pink-50" />
+        <CarouselPrevious className="hidden sm:flex h-8 w-8 border border-gray-200 hover:border-pink-300 hover:bg-pink-50" />
+        <CarouselNext className="hidden sm:flex h-8 w-8 border border-gray-200 hover:border-pink-300 hover:bg-pink-50" />
       </Carousel>
     </section>
   );
