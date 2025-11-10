@@ -69,7 +69,7 @@ function ContactBar() {
 
         <nav className="flex items-center gap-2" aria-label="Social links">
           <SocialIcon
-            href="https://instagram.com/@happy.embroji"
+            href="https://instagram.com/happy.embroji"
             label="Instagram"
             gradient="from-[#F2A97F] to-[#D87C5D]"
           >
@@ -89,7 +89,7 @@ function ContactBar() {
           </SocialIcon>
 
           <SocialIcon
-            href="https://facebook.com/@happy.embroji"
+            href="https://facebook.com/Happy.embroji"
             label="Facebook"
             gradient="from-blue-500 to-blue-700"
           >
