@@ -9,6 +9,8 @@ import {
   BarChart3,
   Menu,
   X,
+  User,
+  Eye,
 } from "lucide-react";
 import ProductTable from "../products-table";
 import { Button } from "../ui/button";
@@ -21,6 +23,8 @@ export default function AdminDashboard() {
     totalProducts: 0,
     totalCategories: 0,
     totalTags: 0,
+    totalVisits: 0,
+    uniqueUsers: 0,
   });
 
   useEffect(() => {
@@ -38,10 +42,17 @@ export default function AdminDashboard() {
       const categories = new Set(products.map((p: any) => p.category?.trim()));
       const tags = new Set(products.map((p: any) => p.tag?.trim()));
 
+      const visitRes = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/stats`
+      );
+      const visitData = await visitRes.json();
+
       setStats({
         totalProducts: products.length,
         totalCategories: categories.size,
         totalTags: tags.size,
+        totalVisits: visitData.totalVisits || 0,
+        uniqueUsers: visitData.uniqueUsers || 0,
       });
     } catch (err) {
       console.error("Error fetching stats", err);
@@ -59,7 +70,9 @@ export default function AdminDashboard() {
       <aside
         className={`fixed md:static inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out
         w-64 bg-gradient-to-b from-pink-600 to-purple-700 text-white p-6 flex flex-col justify-between
-        ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+        ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        }`}
       >
         <div>
           <div className="flex items-center justify-between mb-8 md:mb-10">
@@ -184,6 +197,26 @@ export default function AdminDashboard() {
                 <p className="text-gray-500 text-sm">Unique Tags</p>
                 <h3 className="text-2xl font-bold text-gray-800">
                   {stats.totalTags}
+                </h3>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-6 flex items-center gap-4">
+              <User className="h-10 w-10 text-blue-600" />
+              <div>
+                <p className="text-gray-500 text-sm">Total Visits</p>
+                <h3 className="text-2xl font-bold text-gray-800">
+                  {stats.totalVisits}
+                </h3>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-6 flex items-center gap-4">
+              <Eye className="h-10 w-10 text-green-600" />
+              <div>
+                <p className="text-gray-500 text-sm">Unique Visitors</p>
+                <h3 className="text-2xl font-bold text-gray-800">
+                  {stats.uniqueUsers}
                 </h3>
               </div>
             </div>
