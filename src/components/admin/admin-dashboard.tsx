@@ -43,7 +43,7 @@ export default function AdminDashboard() {
       const tags = new Set(products.map((p: any) => p.tag?.trim()));
 
       const visitRes = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/stats`
+        `${import.meta.env.VITE_API_FALLBACK_URL}/api/stats`
       );
       const visitData = await visitRes.json();
 
