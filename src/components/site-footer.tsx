@@ -108,12 +108,12 @@ export function SiteFooter() {
               </p>
               <div className="flex gap-2">
                 <SocialButton
-                  href="https://instagram.com/@happy.embroji"
+                  href="https://instagram.com/happy.embroji"
                   icon={<Instagram className="h-5 w-5" />}
                   hover="from-[#F2A97F] to-[#D87C5D]"
                 />
                 <SocialButton
-                  href="https://facebook.com/@happy.embroji"
+                  href="https://facebook.com/Happy.embroji"
                   icon={<Facebook className="h-5 w-5" />}
                   hover="from-[#7A8B74] to-[#B3A078]"
                 />
