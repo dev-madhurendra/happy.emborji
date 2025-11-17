@@ -11,7 +11,7 @@
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
   <script>
-    fetch("http://localhost:8081/api/track", {
+    fetch("https://happy-emborji-backend.onrender.com/api/track", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ event: "visit" })
