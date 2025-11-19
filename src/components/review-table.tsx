@@ -14,6 +14,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { Button } from "./ui/button";
+import type { Product } from "../data/products";
 
 interface Review {
   _id: string;
@@ -65,6 +66,27 @@ export default function ReviewTable() {
     minRating: "",
     maxRating: "",
   });
+
+  const [productQuery, setProductQuery] = useState("");
+  const [productOptions, setProductOptions] = useState<Product[]>([]);
+  const [productDropdownOpen, setProductDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    if (!productQuery.trim()) {
+      setProductOptions([]);
+      return;
+    }
+
+    const timeout = setTimeout(async () => {
+      const res = await fetch(`${import.meta.env.VITE_API_FALLBACK_URL}/api/products/search?q=${productQuery}`);
+      const data = await res.json();
+      setProductOptions(data);
+      console.log("Options ", productOptions)
+      console.log("Data ", productDropdownOpen)
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [productQuery]);
 
   const fetchReviews = async () => {
     try {
@@ -307,7 +329,6 @@ export default function ReviewTable() {
       fetchReviews();
     }
   }, [page, filters]);
-
 
   if (loading)
     return (
@@ -733,20 +754,40 @@ export default function ReviewTable() {
                 />
               </div>
 
-              <div>
+              <div className="relative">
                 <label className="block text-sm font-medium mb-1">
-                  Product ID (Optional)
+                  Product (Optional)
                 </label>
+
                 <input
                   type="text"
-                  value={formData.productId || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, productId: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Link to a product ID"
+                  value={productQuery}
+                  onChange={(e) => {
+                    setProductQuery(e.target.value);
+                    setProductDropdownOpen(true);
+                  }}
+                  placeholder="Search product by name"
                   disabled={submitting}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
+
+                {productDropdownOpen && productOptions.length > 0 && (
+                  <div className="absolute z-50 w-full bg-white border border-gray-300 rounded-lg mt-1 max-h-60 overflow-auto shadow-lg">
+                    {productOptions.map((p) => (
+                      <div
+                        key={p._id}
+                        className="px-3 py-2 cursor-pointer hover:bg-blue-50"
+                        onClick={() => {
+                          setFormData({ ...formData, productId: p._id });
+                          setProductQuery(p.name);
+                          setProductDropdownOpen(false);
+                        }}
+                      >
+                        {p.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div>

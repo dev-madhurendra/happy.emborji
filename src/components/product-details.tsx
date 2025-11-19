@@ -5,6 +5,7 @@ import type { Product } from "../data/products";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { slugify, whatsappHref } from "../utils/constants";
+import ReviewSection from "./reviews-section";
 
 export default function ProductDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -14,7 +15,7 @@ export default function ProductDetailsPage() {
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
-    if (!product || !product._id) return; 
+    if (!product || !product._id) return;
 
     const slug = slugify(product.name);
     const url = `${window.location.origin}/product/${slug}/${product._id}`;
@@ -249,6 +250,8 @@ export default function ProductDetailsPage() {
           </div>
         )}
       </div>
+
+      <ReviewSection id={product._id} />
     </div>
   );
 }
