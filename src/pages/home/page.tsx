@@ -1,9 +1,9 @@
-import { CategoryCarousel } from "../../components/item-carousel";
 import { Hero } from "../../components/hero";
-import { ProductGrid } from "../../components/product-grid";
 import { SiteFooter } from "../../components/site-footer";
 import { SiteHeader } from "../../components/site-header";
 import ReviewsMarquee from "../../components/reviews-marquee";
+import CategoryCarousel from "../../components/item-carousel";
+import { ProductGrid } from "../../components/product-grid";
 
 export default function HomePage() {
   return (
@@ -16,7 +16,7 @@ export default function HomePage() {
 
       <section className="mx-auto max-w-7xl px-4 py-8">
         <h2 className="mb-4 font-serif text-2xl font-semibold">Featured Products</h2>
-        <ProductGrid initialTab="all" limit={6} showViewAll={true} />
+        <ProductGrid initialTab="all" limit={10} showViewAll={true} />
       </section>
 
       {/* Customer Reviews */}

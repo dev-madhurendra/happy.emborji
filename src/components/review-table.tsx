@@ -14,7 +14,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { Button } from "./ui/button";
-import type { Product } from "../data/products";
+import SearchableDropdowns from "./searchable-dropdowns";
 
 interface Review {
   _id: string;
@@ -35,6 +35,7 @@ interface ReviewFormData {
   rating?: string;
   message: string;
   productId?: string;
+  productQuery?: string;
 }
 
 interface Filters {
@@ -53,6 +54,8 @@ export default function ReviewTable() {
   const [formData, setFormData] = useState<ReviewFormData>({
     type: "text",
     message: "",
+    productId: "",
+    productQuery: "",
   });
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -67,26 +70,30 @@ export default function ReviewTable() {
     maxRating: "",
   });
 
-  const [productQuery, setProductQuery] = useState("");
-  const [productOptions, setProductOptions] = useState<Product[]>([]);
-  const [productDropdownOpen, setProductDropdownOpen] = useState(false);
+  // const [productQuery, setProductQuery] = useState("");
+  // const [productOptions, setProductOptions] = useState<Product[]>([]);
+  // const [productDropdownOpen, setProductDropdownOpen] = useState(false);
 
-  useEffect(() => {
-    if (!productQuery.trim()) {
-      setProductOptions([]);
-      return;
-    }
+  // useEffect(() => {
+  //   if (!productQuery.trim()) {
+  //     setProductOptions([]);
+  //     return;
+  //   }
 
-    const timeout = setTimeout(async () => {
-      const res = await fetch(`${import.meta.env.VITE_API_FALLBACK_URL}/api/products/search?q=${productQuery}`);
-      const data = await res.json();
-      setProductOptions(data);
-      console.log("Options ", productOptions)
-      console.log("Data ", productDropdownOpen)
-    }, 300);
+  //   const timeout = setTimeout(async () => {
+  //     const res = await fetch(
+  //       `${
+  //         import.meta.env.VITE_API_FALLBACK_URL
+  //       }/api/products/search?q=${productQuery}`
+  //     );
+  //     const data = await res.json();
+  //     setProductOptions(data);
+  //     console.log("Options ", productOptions);
+  //     console.log("Data ", productDropdownOpen);
+  //   }, 300);
 
-    return () => clearTimeout(timeout);
-  }, [productQuery]);
+  //   return () => clearTimeout(timeout);
+  // }, [productQuery]);
 
   const fetchReviews = async () => {
     try {
@@ -112,8 +119,8 @@ export default function ReviewTable() {
       const data = await res.json();
       setReviews(data.reviews);
       setTotalPages(data?.totalPages || 1);
-    } catch (err: any) {
-      setError(err.message || "Error loading reviews");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Error loading review");
     } finally {
       setLoading(false);
     }
@@ -262,8 +269,8 @@ export default function ReviewTable() {
       );
       await fetchReviews();
       closeModal();
-    } catch (err: any) {
-      alert(err.message || "Error saving review");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Error saving review");
     } finally {
       setSubmitting(false);
     }
@@ -316,6 +323,14 @@ export default function ReviewTable() {
         ))}
       </div>
     );
+  };
+
+  const handleProductSelect = (id: string, name: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      productId: id,
+      productQuery: name,
+    }));
   };
 
   useEffect(() => {
@@ -754,7 +769,7 @@ export default function ReviewTable() {
                 />
               </div>
 
-              <div className="relative">
+              {/* <div className="relative">
                 <label className="block text-sm font-medium mb-1">
                   Product (Optional)
                 </label>
@@ -788,7 +803,16 @@ export default function ReviewTable() {
                     ))}
                   </div>
                 )}
-              </div>
+              </div> */}
+
+              <SearchableDropdowns
+                submitting={submitting}
+                productQuery={formData.productQuery ?? ""}
+                setProductQuery={(q) =>
+                  setFormData((prev) => ({ ...prev, productQuery: q }))
+                }
+                onSelect={handleProductSelect}
+              />
 
               <div>
                 <label className="block text-sm font-medium mb-1">

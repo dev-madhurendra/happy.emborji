@@ -19,8 +19,9 @@ interface Product {
   price: number;
   category: string;
   tag: string;
-  description?: string;
   image?: string;
+  description?: string;
+  images?: string[]; 
 }
 
 interface ProductFormData {
@@ -51,8 +52,8 @@ export default function ProductTable() {
     category: "",
     tag: "",
   });
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]); 
+  const [previews, setPreviews] = useState<string[]>([]); 
   const [submitting, setSubmitting] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -73,7 +74,6 @@ export default function ProductTable() {
         limit: "6",
       });
 
-      // Add filter params if they exist
       if (filters.search) params.append("search", filters.search);
       if (filters.category) params.append("category", filters.category);
       if (filters.tag) params.append("tag", filters.tag);
@@ -130,8 +130,8 @@ export default function ProductTable() {
       category: "",
       tag: "",
     });
-    setFile(null);
-    setPreview(null);
+    setFiles([]);
+    setPreviews([]);
     setShowModal(true);
   };
 
@@ -143,8 +143,10 @@ export default function ProductTable() {
       category: product.category,
       tag: product.tag || "",
     });
-    setFile(null);
-    setPreview(product.image || null);
+    setFiles([]);
+    // Load existing images as previews
+    const existingImages = product.images || (product.image ? [product.image] : []);
+    setPreviews(existingImages);
     setShowModal(true);
   };
 
@@ -157,33 +159,66 @@ export default function ProductTable() {
       category: "",
       tag: "",
     });
-    setFile(null);
-    setPreview(null);
+    setFiles([]);
+    setPreviews([]);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      if (selectedFile.size > 10 * 1024 * 1024) {
-        alert("File size must be less than 10MB");
-        return;
+    const selectedFiles = Array.from(e.target.files || []);
+    
+    // Validate files
+    const validFiles: File[] = [];
+    const newPreviews: string[] = [];
+    
+    for (const file of selectedFiles) {
+      if (file.size > 10 * 1024 * 1024) {
+        alert(`${file.name} is too large. Maximum size is 10MB`);
+        continue;
       }
 
-      if (!selectedFile.type.startsWith("image/")) {
-        alert("Please select a valid image file");
-        return;
+      if (!file.type.startsWith("image/")) {
+        alert(`${file.name} is not a valid image file`);
+        continue;
       }
 
-      setFile(selectedFile);
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
-      reader.readAsDataURL(selectedFile);
+      validFiles.push(file);
     }
+
+    // Check total count (limit to 5 images)
+    const totalImages = previews.length + validFiles.length;
+    if (totalImages > 5) {
+      alert("Maximum 5 images allowed per product");
+      return;
+    }
+
+    // Create previews for new files
+    validFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        newPreviews.push(reader.result as string);
+        if (newPreviews.length === validFiles.length) {
+          setPreviews(prev => [...prev, ...newPreviews]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    setFiles(prev => [...prev, ...validFiles]);
+  };
+
+  const removeImage = (index: number) => {
+    setPreviews(prev => prev.filter((_, i) => i !== index));
+    setFiles(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async () => {
     if (!formData.name || !formData.price || !formData.category) {
       alert("Please fill in all required fields");
+      return;
+    }
+
+    if (!editingProduct && files.length === 0) {
+      alert("Please upload at least one image");
       return;
     }
 
@@ -201,23 +236,30 @@ export default function ProductTable() {
 
       const method = isEdit ? "PUT" : "POST";
 
-      const body = isEdit
-        ? JSON.stringify({
-            name: formData.name,
-            price: formData.price,
-            category: formData.category,
-            tag: formData.tag,
-            description: formData.description,
-          })
-        : null;
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("price", formData.price);
+      formDataToSend.append("category", formData.category);
+      formDataToSend.append("tag", formData.tag);
+      if (formData.description) {
+        formDataToSend.append("description", formData.description);
+      }
+
+      files.forEach((file) => {
+        formDataToSend.append("images", file);
+      });
+
+      if (isEdit && previews.length > 0) {
+        const existingImageUrls = previews.filter(p => p.startsWith('http'));
+        formDataToSend.append("existingImages", JSON.stringify(existingImageUrls));
+      }
 
       const options: RequestInit = {
         method,
         headers: {
           Authorization: `Bearer ${token}`,
-          ...(isEdit ? { "Content-Type": "application/json" } : {}),
         },
-        ...(isEdit ? { body } : { body: createFormData(formData, file) }),
+        body: formDataToSend,
       };
 
       const res = await fetch(url, options);
@@ -238,16 +280,6 @@ export default function ProductTable() {
       setSubmitting(false);
     }
   };
-
-  function createFormData(formData: any, file: File | null) {
-    const fd = new FormData();
-    fd.append("name", formData.name);
-    fd.append("price", formData.price);
-    fd.append("category", formData.category);
-    fd.append("tag", formData.tag);
-    if (file) fd.append("image", file);
-    return fd;
-  }
 
   const handleFilterChange = (key: keyof Filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -283,7 +315,6 @@ export default function ProductTable() {
 
     if (noFilters || page) {
       fetchProducts();
-      console.log("Rendering");
     }
   }, [page, filters]);
 
@@ -327,25 +358,6 @@ export default function ProductTable() {
           {showFilters && (
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Search */}
-                {/* <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700">
-                    Search
-                  </label>
-                  <div className="relative">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <input
-                      type="text"
-                      value={filters.search}
-                      onChange={(e) =>
-                        handleFilterChange("search", e.target.value)
-                      }
-                      placeholder="Search products..."
-                      className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                </div> */}
-
                 {/* Category */}
                 <div>
                   <label className="block text-sm font-medium mb-1 text-gray-700">
@@ -440,7 +452,7 @@ export default function ProductTable() {
         <table className="w-full text-left border-collapse">
           <thead className="bg-gray-50 text-gray-600 text-sm">
             <tr>
-              <th className="p-3">Image</th>
+              <th className="p-3">Images</th>
               <th className="p-3">Name</th>
               <th className="p-3">Category</th>
               <th className="p-3">Price</th>
@@ -450,45 +462,55 @@ export default function ProductTable() {
             </tr>
           </thead>
           <tbody>
-            {products.map((p) => (
-              <tr
-                key={p._id}
-                className="border-t border-gray-200 hover:bg-gray-50"
-              >
-                <td className="p-3">
-                  {p.image ? (
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      className="w-12 h-12 object-cover rounded"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">
-                      No Image
-                    </div>
-                  )}
-                </td>
-                <td className="p-3 font-medium">{p.name}</td>
-                <td className="p-3">{p.category}</td>
-                <td className="p-3">₹{p.price}</td>
-                <td className="p-3">{p.tag || "-"}</td>
-                <td className="p-3">{p.description || "-"}</td>
-                <td className="p-3 text-right space-x-2">
-                  <button
-                    onClick={() => openEditModal(p)}
-                    className="text-blue-500 hover:text-blue-600 inline-flex items-center justify-center p-1"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => deleteProduct(p._id)}
-                    className="text-red-500 hover:text-red-600 inline-flex items-center justify-center p-1"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {products.map((p) => {
+              const productImages = p.images || [];
+              return (
+                <tr
+                  key={p._id}
+                  className="border-t border-gray-200 hover:bg-gray-50"
+                >
+                  <td className="p-3">
+                    {productImages.length > 0 ? (
+                      <div className="flex items-center gap-1">
+                        <img
+                          src={productImages[0]}
+                          alt={p.name}
+                          className="w-12 h-12 object-cover rounded"
+                        />
+                        {productImages.length > 1 && (
+                          <span className="text-xs bg-gray-200 px-2 py-1 rounded">
+                            +{productImages.length - 1}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">
+                        No Image
+                      </div>
+                    )}
+                  </td>
+                  <td className="p-3 font-medium">{p.name}</td>
+                  <td className="p-3">{p.category}</td>
+                  <td className="p-3">₹{p.price}</td>
+                  <td className="p-3">{p.tag || "-"}</td>
+                  <td className="p-3">{p.description || "-"}</td>
+                  <td className="p-3 text-right space-x-2">
+                    <button
+                      onClick={() => openEditModal(p)}
+                      className="text-blue-500 hover:text-blue-600 inline-flex items-center justify-center p-1"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => deleteProduct(p._id)}
+                      className="text-red-500 hover:text-red-600 inline-flex items-center justify-center p-1"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
 
@@ -592,7 +614,7 @@ export default function ProductTable() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b">
               <h3 className="text-lg font-semibold">
                 {editingProduct ? "Edit Product" : "Add New Product"}
@@ -695,42 +717,57 @@ export default function ProductTable() {
 
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Product Image {!editingProduct && "*"}
+                  Product Images {!editingProduct && "*"} (Max 5)
                 </label>
-                <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition cursor-pointer">
-                  <input
-                    type="file"
-                    onChange={handleFileChange}
-                    accept="image/*"
-                    disabled={submitting}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  />
-                  {preview ? (
-                    <div className="space-y-2">
-                      <img
-                        src={preview}
-                        alt="Preview"
-                        className="w-full h-40 object-contain rounded border border-gray-300"
-                      />
-                      <p className="text-sm text-blue-600 font-medium">
-                        {file?.name || "Current image"}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Click to change image
-                      </p>
-                    </div>
-                  ) : (
+                
+                {/* Image Preview Grid */}
+                {previews.length > 0 && (
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    {previews.map((preview, idx) => (
+                      <div key={idx} className="relative group">
+                        <img
+                          src={preview}
+                          alt={`Preview ${idx + 1}`}
+                          className="w-full h-32 object-cover rounded border border-gray-300"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeImage(idx)}
+                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                          disabled={submitting}
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Upload Area */}
+                {previews.length < 5 && (
+                  <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition cursor-pointer">
+                    <input
+                      type="file"
+                      onChange={handleFileChange}
+                      accept="image/*"
+                      multiple
+                      disabled={submitting}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
                     <div className="space-y-2">
                       <Upload className="w-8 h-8 text-gray-400 mx-auto" />
                       <p className="text-gray-700 font-medium">
                         Click to upload or drag and drop
                       </p>
                       <p className="text-xs text-gray-500">
-                        PNG, JPG, GIF up to 10MB
+                        PNG, JPG, GIF up to 10MB each
+                      </p>
+                      <p className="text-xs text-blue-600">
+                        {previews.length > 0 && `${previews.length}/5 images uploaded`}
                       </p>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-2 pt-2">

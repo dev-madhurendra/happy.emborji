@@ -22,26 +22,31 @@ export default function AddProduct() {
     tag: "",
     description: "",
   });
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<Message | null>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    setMessage(null);
-  };
-
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setFile(selectedFile);
+    const selectedFiles = e.target.files;
+    if (!selectedFiles) return;
+
+    const fileArray = Array.from(selectedFiles);
+    setFiles(fileArray);
+
+    const previewArray: string[] = [];
+    fileArray.forEach((file) => {
       const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
-      reader.readAsDataURL(selectedFile);
-      setMessage(null);
-    }
+      reader.onloadend = () => {
+        previewArray.push(reader.result as string);
+        if (previewArray.length === fileArray.length) {
+          setPreviews(previewArray);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    setMessage(null);
   };
 
   const validateForm = (): boolean | void => {
@@ -57,10 +62,14 @@ export default function AddProduct() {
       setMessage({ type: "error", text: "Category is required" });
       return;
     }
-    if (!file) {
-      setMessage({ type: "error", text: "Please upload a product image" });
+    if (files.length === 0) {
+      setMessage({
+        type: "error",
+        text: "Please upload at least one product image",
+      });
       return;
     }
+
     return true;
   };
 
@@ -76,7 +85,9 @@ export default function AddProduct() {
       Object.entries(form).forEach(([key, value]) => {
         formData.append(key, value);
       });
-      if (file) formData.append("image", file);
+      files.forEach((file) => {
+        formData.append("images", file);
+      });
 
       const res = await fetch(
         `${import.meta.env.VITE_API_BASE_URL}/api/addProduct`,
@@ -95,8 +106,8 @@ export default function AddProduct() {
           tag: "",
           description: "",
         });
-        setFile(null);
-        setPreview(null);
+        setFiles([]);
+        setPreviews([]);
       } else {
         setMessage({
           type: "error",
@@ -147,106 +158,43 @@ export default function AddProduct() {
 
             <div>
               <label className="block text-sm font-semibold text-foreground mb-2">
-                Product Name *
+                Product Images *
               </label>
-              <input
-                name="name"
-                placeholder="Enter product name"
-                value={form.name}
-                onChange={handleChange}
-                disabled={loading}
-                className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"
-              />
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-foreground mb-2">
-                  Price *
-                </label>
-                <input
-                  name="price"
-                  placeholder="Rs 0.00"
-                  value={form.price}
-                  onChange={handleChange}
-                  disabled={loading}
-                  className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-foreground mb-2">
-                  Category *
-                </label>
-                <input
-                  name="category"
-                  placeholder="e.g., Electronics"
-                  value={form.category}
-                  onChange={handleChange}
-                  disabled={loading}
-                  className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-foreground mb-2">
-                Tags
-              </label>
-              <input
-                name="tag"
-                placeholder="Embroidery or Crochet"
-                value={form.tag}
-                onChange={handleChange}
-                disabled={loading}
-                className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-foreground mb-2">
-                Product Description (Optional)
-              </label>
-              <input
-                name="description"
-                placeholder="Enter product description"
-                value={form.name}
-                onChange={handleChange}
-                disabled={loading}
-                className="w-full px-4 py-2.5 bg-input border border-border text-foreground placeholder-muted-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition disabled:opacity-50 disabled:cursor-not-allowed"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-foreground mb-2">
-                Product Image *
-              </label>
               <div className="relative border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 hover:bg-secondary/30 transition cursor-pointer">
+                {/* File Input FIXED */}
                 <input
                   type="file"
-                  onChange={handleFileChange}
+                  multiple
                   accept="image/*"
+                  onChange={handleFileChange}
                   disabled={loading}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  className="absolute inset-0 w-full h-full z-10 opacity-0 cursor-pointer"
                 />
-                {preview ? (
-                  <div className="space-y-3">
-                    <img
-                      src={preview}
-                      alt="Preview"
-                      className="w-full h-32 object-cover rounded border border-border"
-                    />
-                    <p className="text-sm text-primary font-medium">
-                      {file?.name}
-                    </p>
+
+                {/* Preview Grid */}
+                {previews.length > 0 ? (
+                  <div className="grid grid-cols-2 gap-3 pointer-events-none">
+                    {previews.map((src, i) => (
+                      <div key={i} className="space-y-2">
+                        <img
+                          src={src}
+                          className="w-full h-32 object-cover rounded border border-border"
+                        />
+                        <p className="text-xs text-primary font-medium truncate">
+                          {files[i]?.name}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-2 pointer-events-none">
                     <Upload className="w-8 h-8 text-muted-foreground mx-auto" />
                     <p className="text-foreground font-medium">
-                      Click to upload or drag and drop
+                      Click to upload multiple images
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      PNG, JPG, GIF up to 10MB
+                      PNG, JPG, GIF • Max 10MB each
                     </p>
                   </div>
                 )}

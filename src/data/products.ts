@@ -2,12 +2,16 @@ export type Product = {
   _id: string
   name: string
   price: number
-  category: string  // For carousel: "Dolls", "Keychains", "Hoop Art", etc.
-  tag: "embroidery" | "crochet"  // Main category
+  category: string  
+  tag: "embroidery" | "crochet"  
   image: string
   description?: string
   images?: string[]
+  discount?: number
 }
+
+export type ProductMinimal = Pick<Product, "_id" | "name">
+
 
 export const staticProducts: Product[] = [
   {

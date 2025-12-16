@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { ProductCard } from "./product-card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
@@ -13,6 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { staticProducts } from "../data/products";
+import ProductCard from "./product-card";
 
 type Product = {
   _id: string;
@@ -67,6 +67,8 @@ export function ProductGrid({
         );
       } catch (error) {
         console.error("Error fetching products:", error);
+        setProducts(staticProducts);
+        setTotalPages(Math.ceil(staticProducts.length / limit));
       } finally {
         setLoading(false);
       }
@@ -83,8 +85,17 @@ export function ProductGrid({
       list = list.filter((p) => p.tag?.trim().toLowerCase() === tabValue);
     }
 
+    if (q.trim()) {
+      const query = q.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(query) ||
+          p.category.toLowerCase().includes(query)
+      );
+    }
+
     return list;
-  }, [tab, products]);
+  }, [tab, products, q]);
 
   if (loading) {
     return (
@@ -164,6 +175,11 @@ export function ProductGrid({
                 )}
               </TabsTrigger>
             </TabsList>
+
+            <div className="text-sm text-muted-foreground">
+              Showing <span className="font-semibold text-foreground">{filtered.length}</span>{" "}
+              {filtered.length === 1 ? "product" : "products"}
+            </div>
           </div>
 
           <TabsContent value={tab} className="mt-8">
@@ -173,30 +189,30 @@ export function ProductGrid({
       </div>
 
       {totalPages > 1 && (
-        <div className="mt-6 flex flex-col items-center gap-2">
-          <div className="flex items-center gap-1">
+        <div className="mt-12 flex flex-col items-center gap-4">
+          <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="icon"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="h-8 w-8 p-0"
+              className="h-10 w-10 rounded-lg border-2 disabled:opacity-50 hover:bg-[#D8E0C8] hover:border-[#7A8B74] transition-all"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-5 w-5" />
             </Button>
 
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-1">
               {page > 3 && (
                 <>
                   <Button
                     variant="outline"
                     size="icon"
                     onClick={() => setPage(1)}
-                    className="h-8 w-8 text-sm"
+                    className="h-10 w-10 rounded-lg border-2 text-sm font-medium hover:bg-[#D8E0C8] hover:border-[#7A8B74] transition-all"
                   >
                     1
                   </Button>
-                  {page > 4 && <span className="px-1 text-gray-400">…</span>}
+                  {page > 4 && <span className="px-2 text-gray-400">…</span>}
                 </>
               )}
 
@@ -209,12 +225,14 @@ export function ProductGrid({
 
                 return (
                   <Button
+                    key={pageNum}
                     variant={page === pageNum ? "default" : "outline"}
                     size="icon"
-                    className={`h-8 w-8 text-sm ${
+                    onClick={() => setPage(pageNum)}
+                    className={`h-10 w-10 rounded-lg border-2 text-sm font-medium transition-all ${
                       page === pageNum
-                        ? "bg-[#7A8B74] text-white hover:bg-[#556B2F]"
-                        : ""
+                        ? "bg-[#7A8B74] text-white hover:bg-[#556B2F] border-[#7A8B74] shadow-md"
+                        : "hover:bg-[#D8E0C8] hover:border-[#7A8B74]"
                     }`}
                   >
                     {pageNum}
@@ -225,13 +243,13 @@ export function ProductGrid({
               {page < totalPages - 2 && (
                 <>
                   {page < totalPages - 3 && (
-                    <span className="px-1 text-gray-400">…</span>
+                    <span className="px-2 text-gray-400">…</span>
                   )}
                   <Button
                     variant="outline"
                     size="icon"
                     onClick={() => setPage(totalPages)}
-                    className="h-8 w-8 text-sm"
+                    className="h-10 w-10 rounded-lg border-2 text-sm font-medium hover:bg-[#D8E0C8] hover:border-[#7A8B74] transition-all"
                   >
                     {totalPages}
                   </Button>
@@ -244,18 +262,19 @@ export function ProductGrid({
               size="icon"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="h-8 w-8 p-0"
+              className="h-10 w-10 rounded-lg border-2 disabled:opacity-50 hover:bg-[#D8E0C8] hover:border-[#7A8B74] transition-all"
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-5 w-5" />
             </Button>
           </div>
 
-          <span className="text-xs text-gray-500">
-            Page <span className="font-medium text-gray-700">{page}</span> of{" "}
-            <span className="font-medium text-gray-700">{totalPages}</span>
+          <span className="text-sm text-muted-foreground">
+            Page <span className="font-semibold text-foreground">{page}</span> of{" "}
+            <span className="font-semibold text-foreground">{totalPages}</span>
           </span>
         </div>
       )}
+
       {showViewAll && (
         <div className="mt-12 text-center">
           <Button
@@ -315,35 +334,16 @@ function Grid({
   }
 
   return (
-    <>
-      {/* <div className="mb-6 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-muted-foreground">
-          Showing {products.length} amazing{" "}
-          {products.length === 1 ? "product" : "products"}
-        </h3>
-
-        <div className="flex items-center gap-2 text-sm">
-          <span className="text-muted-foreground">Sort by:</span>
-          <select className="rounded-lg border-2 bg-background px-3 py-2 font-medium outline-none focus:border-pink-500">
-            <option>Most Popular</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
-            <option>Newest First</option>
-          </select>
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      {products.map((p, index) => (
+        <div
+          key={p._id}
+          className="animate-fadeIn"
+          style={{ animationDelay: `${index * 50}ms` }}
+        >
+          <ProductCard product={p} />
         </div>
-      </div> */}
-
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {products.map((p, index) => (
-          <div
-            key={p._id}
-            className="animate-fadeIn"
-            style={{ animationDelay: `${index * 50}ms` }}
-          >
-            <ProductCard product={p} />
-          </div>
-        ))}
-      </div>
+      ))}
 
       <style>{`
         @keyframes fadeIn {
@@ -361,6 +361,6 @@ function Grid({
           opacity: 0;
         }
       `}</style>
-    </>
+    </div>
   );
 }
