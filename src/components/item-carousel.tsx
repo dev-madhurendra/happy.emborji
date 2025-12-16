@@ -5,7 +5,7 @@ import { toTitleCase } from "../lib/utils";
 
 type Category = {
   category: string;
-  images?: string[];
+  images: string[];
   image?: string;
   count?: number;
 };
