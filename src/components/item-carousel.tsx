@@ -5,7 +5,7 @@ import { toTitleCase } from "../lib/utils";
 
 type Category = {
   category: string;
-  images: string[];
+  images?: string[];
   image?: string;
   count?: number;
 };
@@ -26,7 +26,7 @@ export default function CategoryCarousel() {
     async function fetchCategories() {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/api/categories`
+          `${import.meta.env.VITE_API_FALLBACK_URL}/api/categories`
         );
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
