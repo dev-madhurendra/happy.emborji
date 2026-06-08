@@ -20,6 +20,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { slugify, whatsappHref } from "../utils/constants";
 import ReviewSection from "./reviews-section";
+import NO_IMAGE_FOUND from '../../public/no-image-found.jpg'
 
 export default function ProductDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -75,6 +76,7 @@ export default function ProductDetailsPage() {
       }
     };
     fetchProduct();
+
   }, [id]);
 
   if (loading)
@@ -372,6 +374,7 @@ export default function ProductDetailsPage() {
 
         {/* Related Products */}
         {related.length > 0 && (
+          
           <div className="bg-white rounded-2xl p-6 md:p-8 shadow-xl border border-gray-100">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl md:text-3xl font-bold text-[#3C3C3C]">
@@ -396,7 +399,7 @@ export default function ProductDetailsPage() {
                     <CardContent className="p-0">
                       <div className="relative w-full aspect-square overflow-hidden">
                         <img
-                          src={p.image}
+                          src={p.image ?? (p.images ? p?.images[0] : NO_IMAGE_FOUND)}
                           alt={p.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
