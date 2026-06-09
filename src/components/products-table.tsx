@@ -21,7 +21,7 @@ interface Product {
   tag: string;
   image?: string;
   description?: string;
-  images?: string[]; 
+  images?: string[];
 }
 
 interface ProductFormData {
@@ -52,8 +52,8 @@ export default function ProductTable() {
     category: "",
     tag: "",
   });
-  const [files, setFiles] = useState<File[]>([]); 
-  const [previews, setPreviews] = useState<string[]>([]); 
+  const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -81,7 +81,7 @@ export default function ProductTable() {
       if (filters.maxPrice) params.append("maxPrice", filters.maxPrice);
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/products?${params}`
+        `${import.meta.env.VITE_API_BASE_URL}/api/products?${params}`,
       );
 
       if (res.status === 401)
@@ -110,7 +110,7 @@ export default function ProductTable() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       if (res.ok) {
         setProducts(products.filter((p) => p._id !== id));
@@ -145,7 +145,8 @@ export default function ProductTable() {
     });
     setFiles([]);
     // Load existing images as previews
-    const existingImages = product.images || (product.image ? [product.image] : []);
+    const existingImages =
+      product.images || (product.image ? [product.image] : []);
     setPreviews(existingImages);
     setShowModal(true);
   };
@@ -165,11 +166,11 @@ export default function ProductTable() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
-    
+
     // Validate files
     const validFiles: File[] = [];
     const newPreviews: string[] = [];
-    
+
     for (const file of selectedFiles) {
       if (file.size > 10 * 1024 * 1024) {
         alert(`${file.name} is too large. Maximum size is 10MB`);
@@ -192,23 +193,23 @@ export default function ProductTable() {
     }
 
     // Create previews for new files
-    validFiles.forEach(file => {
+    validFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         newPreviews.push(reader.result as string);
         if (newPreviews.length === validFiles.length) {
-          setPreviews(prev => [...prev, ...newPreviews]);
+          setPreviews((prev) => [...prev, ...newPreviews]);
         }
       };
       reader.readAsDataURL(file);
     });
 
-    setFiles(prev => [...prev, ...validFiles]);
+    setFiles((prev) => [...prev, ...validFiles]);
   };
 
   const removeImage = (index: number) => {
-    setPreviews(prev => prev.filter((_, i) => i !== index));
-    setFiles(prev => prev.filter((_, i) => i !== index));
+    setPreviews((prev) => prev.filter((_, i) => i !== index));
+    setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async () => {
@@ -250,8 +251,11 @@ export default function ProductTable() {
       });
 
       if (isEdit && previews.length > 0) {
-        const existingImageUrls = previews.filter(p => p.startsWith('http'));
-        formDataToSend.append("existingImages", JSON.stringify(existingImageUrls));
+        const existingImageUrls = previews.filter((p) => p.startsWith("http"));
+        formDataToSend.append(
+          "existingImages",
+          JSON.stringify(existingImageUrls),
+        );
       }
 
       const options: RequestInit = {
@@ -270,7 +274,9 @@ export default function ProductTable() {
       }
 
       alert(
-        isEdit ? "Product updated successfully!" : "Product added successfully!"
+        isEdit
+          ? "Product updated successfully!"
+          : "Product added successfully!",
       );
       await fetchProducts();
       closeModal();
@@ -464,6 +470,7 @@ export default function ProductTable() {
           <tbody>
             {products.map((p) => {
               const productImages = p.images || [];
+              const productImage = p.image;
               return (
                 <tr
                   key={p._id}
@@ -473,7 +480,7 @@ export default function ProductTable() {
                     {productImages.length > 0 ? (
                       <div className="flex items-center gap-1">
                         <img
-                          src={productImages[0]}
+                          src={productImages ? productImages[0] : productImage}
                           alt={p.name}
                           className="w-12 h-12 object-cover rounded"
                         />
@@ -484,9 +491,13 @@ export default function ProductTable() {
                         )}
                       </div>
                     ) : (
-                      <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">
-                        No Image
-                      </div>
+                      productImage && (
+                        <img
+                          src={productImage}
+                          alt={p.name}
+                          className="w-12 h-12 object-cover rounded"
+                        />
+                      )
                     )}
                   </td>
                   <td className="p-3 font-medium">{p.name}</td>
@@ -719,7 +730,7 @@ export default function ProductTable() {
                 <label className="block text-sm font-medium mb-1">
                   Product Images {!editingProduct && "*"} (Max 5)
                 </label>
-                
+
                 {/* Image Preview Grid */}
                 {previews.length > 0 && (
                   <div className="grid grid-cols-3 gap-2 mb-3">
@@ -763,7 +774,8 @@ export default function ProductTable() {
                         PNG, JPG, GIF up to 10MB each
                       </p>
                       <p className="text-xs text-blue-600">
-                        {previews.length > 0 && `${previews.length}/5 images uploaded`}
+                        {previews.length > 0 &&
+                          `${previews.length}/5 images uploaded`}
                       </p>
                     </div>
                   </div>
