@@ -36,7 +36,7 @@ export default function SeasonPosterTable() {
   const fetchPosters = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/season-posters?limit=50`);
+      const res = await fetch(`${import.meta.env.VITE_API_FALLBACK_URL}/api/season-posters?limit=50`);
       const data = await res.json();
       setPosters(data.posters || []);
     } catch (err) {
@@ -48,7 +48,7 @@ export default function SeasonPosterTable() {
 
   const handleToggleActive = async (id: string) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/season-posters/${id}/toggle`, {
+      const res = await fetch(`${import.meta.env.VITE_API_FALLBACK_URL}/season-posters/${id}/toggle`, {
         method: "PATCH",
       });
       if (res.ok) {
@@ -66,7 +66,7 @@ export default function SeasonPosterTable() {
     if (!window.confirm("Are you sure you want to delete this season poster campaign?")) return;
     
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/season-posters/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_FALLBACK_URL}/season-posters/${id}`, {
         method: "DELETE",
       });
       if (res.ok) {

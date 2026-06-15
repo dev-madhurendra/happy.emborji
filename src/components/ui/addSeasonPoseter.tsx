@@ -131,7 +131,7 @@ export default function AddSeasonPoster() {
       formData.append("salePoints", JSON.stringify(cleanSalePoints));
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/season-posters`,
+        `${import.meta.env.VITE_API_FALLBACK_URL}/season-posters`,
         {
           method: "POST",
           body: formData,
