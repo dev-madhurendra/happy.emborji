@@ -4,11 +4,14 @@ import { SiteHeader } from "../../components/site-header";
 import ReviewsMarquee from "../../components/reviews-marquee";
 import CategoryCarousel from "../../components/item-carousel";
 import { ProductGrid } from "../../components/product-grid";
+import SeasonBanner from "../../components/ui/seasonBanner";
 
 export default function HomePage() {
   return (
     <>
       <SiteHeader />
+
+      <SeasonBanner />
 
       <Hero />
 

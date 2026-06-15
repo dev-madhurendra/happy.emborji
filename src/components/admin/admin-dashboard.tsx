@@ -11,10 +11,12 @@ import {
   X,
   User,
   Eye,
+  ImageIcon,
 } from "lucide-react";
 import ProductTable from "../products-table";
 import { Button } from "../ui/button";
 import ReviewTable from "../review-table";
+import AddSeasonPoster from "./admin-poster";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -108,6 +110,18 @@ export default function AdminDashboard() {
             >
               <Package className="h-5 w-5" />
               Products
+            </button>
+
+           <button
+              onClick={() => setActiveTab("posters")}
+              className={`flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-lg transition text-sm ${
+                activeTab === "posters"
+                  ? "bg-white/20 font-semibold shadow-sm"
+                  : "hover:bg-white/10 opacity-90 hover:opacity-100"
+              }`}
+            >
+              <ImageIcon className="h-4 w-4" />
+              Season Posters
             </button>
 
             <button
@@ -225,6 +239,8 @@ export default function AdminDashboard() {
 
         {/* Products Tab */}
         {activeTab === "products" && <ProductTable />}
+
+        {activeTab === "posters" && <AddSeasonPoster />}
 
         {/* Reviews Tab */}
         {activeTab === "reviews" && (
